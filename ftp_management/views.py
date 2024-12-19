@@ -6,9 +6,10 @@ from django.core.files.storage import default_storage
 import os
 from . import services
 
+root = "C:\LAB-PROJECTs\\network_files_management\media\\"
 host_ = 'LAB-C113'
 password_ = 'LAB-C113'
-ip_ = ['192.168.43.153', '192.168.1.147']
+ip_ = ['192.168.1.153', '192.168.1.151']
 # Create your views here.
 
 def home(request):
@@ -30,6 +31,7 @@ def files_management(request):
         template,
         page_object,
     )
+
 @csrf_exempt
 def upload_files(request):
     if request.method == 'POST':
@@ -37,10 +39,8 @@ def upload_files(request):
         saved_files = []
         for file in files:
             file_path = default_storage.save(f'uploads/{file.name}', file)
-            saved_files.append(file_path)
-
-        services.ssh_connection(host_, ip_[0], password_)
-
+            saved_files.append(f"{root}{file_path}")
+        transfer_files(saved_files)
         return JsonResponse({'status': 'success', 'files': saved_files})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
@@ -61,4 +61,11 @@ def upload_directory(request):
 
         return JsonResponse({'status': 'success', 'files': saved_files})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+
+def transfer_files(paths):
+    for ip in ip_:
+        for path in paths:
+            services.ssh_copy_file_to_remote_client(host_, ip, password_, path)
+
 

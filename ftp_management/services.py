@@ -37,7 +37,7 @@ def set_fingerprint(host, ip):
 
 
 def ssh_connection(host: str, ip: str, password: str):
-    print("Etablishing SSH connection .....")
+    print(f"\nEtablishing SSH connection with {ip} .....")
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -47,7 +47,7 @@ def ssh_connection(host: str, ip: str, password: str):
         stdin, stdout, stderr = client.exec_command('cd')  # Example command
         print("OK: Connected to : " + stdout.read().decode())
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error ({host}@{ip}): {e}")
     finally:
         client.close()
 
@@ -57,7 +57,7 @@ def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str,
 
     try:
         # Establish SSH connection using paramiko
-        print("Establishing SSH connection .....")
+        print(f"\nEstablishing SSH connection to {host}@{ip}.....")
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(ip, username=host, password=password)
@@ -75,7 +75,7 @@ def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str,
 
     finally:
         client.close()
-        print("SSH connection closed.")
+        print("SSH connection closed.\n")
 
 
 
@@ -85,5 +85,4 @@ def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str,
 
 
 # ssh_connection(host_, ip_[0], password_)
-# ssh_copy_file_to_remote_client(host_, ip_[0], password_, 'test', True)
 
