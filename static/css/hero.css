@@ -1,0 +1,104 @@
+/* Hero Section Styling */
+#hero {
+    position: relative;
+    height: 40vh;
+    width: 100%;
+    color: #ffffff; /* Set text color to white for better contrast */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#hero .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    z-index: 1;
+    backdrop-filter: blur(5px); /* Apply blur effect */
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero .hero-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: #e7ffdf; /* Light green text color to complement your background */
+    animation: fadeIn 2s ease-in-out;
+}
+
+#hero .hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #b3e6b8; /* Softer green shade for subtitle */
+    animation: fadeIn 2.5s ease-in-out;
+}
+
+#hero .hero-buttons .btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#hero .hero-buttons .btn-primary {
+    background-color: #e30917;
+    border: none;
+    color: #ffffff; /* White button text */
+}
+
+#hero .hero-buttons .btn-primary:hover {
+    background-color: #b30714;
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+#hero .hero-buttons .btn-outline-light {
+    border: 2px solid #ffffff;
+    color: #ffffff; /* White text */
+}
+
+#hero .btn-outline-light:hover {
+    background-color: #ffffff;
+    color: #e30917;
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #hero .hero-title {
+        font-size: 2.5rem;
+    }
+
+    #hero .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    #hero .hero-buttons .btn {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+    }
+}

@@ -1,0 +1,63 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/devices_up.css' %}">
+<section id="devices_up" class="py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Connected Devices <span>(4)</span></h2>
+        <div class="row justify-content-center">
+            <!-- Example Device Card -->
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="device-card">
+                    <div class="device-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="device-info">
+                        <h3 class="device-name">PC-Lab113</h3>
+                        <p class="device-ip">IP: 192.168.0.101</p>
+                        <p class="device-status">Status: <span class="text-success">Online</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more device cards here -->
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="device-card">
+                    <div class="device-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <div class="device-info">
+                        <h3 class="device-name">Laptop-User1</h3>
+                        <p class="device-ip">IP: 192.168.0.102</p>
+                        <p class="device-status">Status: <span class="text-success">Online</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="device-card">
+                    <div class="device-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="device-info">
+                        <h3 class="device-name">Phone123</h3>
+                        <p class="device-ip">IP: 192.168.0.103</p>
+                        <p class="device-status">Status: <span class="text-warning">Idle</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="device-card">
+                    <div class="device-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="device-info">
+                        <h3 class="device-name">Phone123</h3>
+                        <p class="device-ip">IP: 192.168.0.103</p>
+                        <p class="device-status">Status: <span class="text-warning">Idle</span></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

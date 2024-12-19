@@ -1,0 +1,86 @@
+/* Devices Up Section Styling */
+#devices_up {
+    background: linear-gradient(135deg, #0d0d0d, #262626); /* Futuristic gradient background */
+    color: #fff;
+}
+
+#devices_up .section-title {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #e30917;
+    margin-bottom: 2rem;
+}
+
+.device-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.device-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.device-icon {
+    font-size: 3rem;
+    color: #e30917;
+    margin-bottom: 15px;
+    animation: bounce 2s infinite;
+}
+
+.device-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.device-ip,
+.device-status {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.text-success {
+    color: #4caf50; /* Online status green */
+}
+
+.text-warning {
+    color: #ffc107; /* Idle status yellow */
+}
+
+.text-danger {
+    color: #f44336; /* Offline status red */
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .device-card {
+        padding: 15px;
+    }
+
+    .device-name {
+        font-size: 1.2rem;
+    }
+
+    .device-ip,
+    .device-status {
+        font-size: 0.9rem;
+    }
+}

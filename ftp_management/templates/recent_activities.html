@@ -1,0 +1,45 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/recent_activities.css' %}">
+<section id="recent_activities" class="py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Recent Activities</h2>
+        <div class="timeline">
+            <!-- Timeline Item 1 -->
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="timeline-content">
+                    <h4 class="activity-title">File Uploaded</h4>
+                    <p class="activity-details">User <strong>Admin</strong> uploaded <strong>report2024.pdf</strong> to shared folder.</p>
+                    <span class="activity-time">10:45 AM, Today</span>
+                </div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="timeline-content">
+                    <h4 class="activity-title">New Device Connected</h4>
+                    <p class="activity-details">Device <strong>Laptop123</strong> connected to the network.</p>
+                    <span class="activity-time">9:30 AM, Today</span>
+                </div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="timeline-content">
+                    <h4 class="activity-title">Application Installed</h4>
+                    <p class="activity-details">Application <strong>Python3.11</strong> installed on device <strong>PC-Lab113</strong>.</p>
+                    <span class="activity-time">Yesterday</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

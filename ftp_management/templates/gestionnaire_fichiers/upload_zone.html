@@ -1,0 +1,57 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/upload_zone.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<section id="upload_zone" class="py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-4">File & Directory Management</h2>
+
+        <!-- Two Columns: Files Upload & Directories Upload -->
+        <div class="upload-zone-container">
+            <!-- Column 1: File Upload -->
+            <div class="upload-column">
+                <div class="drag-drop-area" id="file_upload_zone">
+                    <div class="drag-drop-content">
+                        <i class="fas fa-file-upload fa-3x"></i>
+                        <p>Drag & Drop Files Here</p>
+                        <span>OR</span>
+                        <label for="file_input" class="upload-button">
+                            <i class="fas fa-file"></i> Browse Files
+                        </label>
+                        <input type="file" id="file_input" multiple hidden>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Directory Upload -->
+            <div class="upload-column">
+                <div class="drag-drop-area" id="directory_upload_zone">
+                    <div class="drag-drop-content">
+                        <i class="fas fa-folder-plus fa-3x"></i>
+                        <p>Drag & Drop Directories Here</p>
+                        <span>OR</span>
+                        <label for="directory_input" class="upload-button">
+                            <i class="fas fa-folder-open"></i> Browse Directories
+                        </label>
+                        <input disabled type="file" id="directory_input" webkitdirectory hidden>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Buttons -->
+        <div class="upload-actions mt-4 text-center">
+            <button id="share_all" class="btn btn-primary">
+                <i class="fas fa-share-alt"></i> Share to All Devices
+            </button>
+            <button id="share_specific" class="btn btn-secondary">
+                <i class="fas fa-user-friends"></i> Share to Specific Devices
+            </button>
+        </div>
+    </div>
+</section>
+
+
+<script src="{% static 'js/upload_zone.js' %}">
+
+</script>

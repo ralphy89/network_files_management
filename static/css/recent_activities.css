@@ -1,0 +1,90 @@
+/* Recent Activities Section Styling */
+#recent_activities {
+    background: linear-gradient(135deg, #1a1a1a, #262626); /* Futuristic gradient */
+    color: #ffffff;
+}
+
+#recent_activities .section-title {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #e30917;
+    margin-bottom: 2rem;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin: 0 auto;
+    border-left: 2px solid #e30917;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 2.5rem;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-icon {
+    position: absolute;
+    top: 0;
+    left: -16px;
+    width: 32px;
+    height: 32px;
+    background-color: #e30917;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.2rem;
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.timeline-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.timeline-content .activity-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #e30917;
+}
+
+.timeline-content .activity-details {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.timeline-content .activity-time {
+    font-size: 0.85rem;
+    color: #b3b3b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .timeline {
+        padding-left: 1rem;
+    }
+
+    .timeline-item {
+        padding-left: 2rem;
+    }
+
+    .timeline-icon {
+        left: -12px;
+        width: 24px;
+        height: 24px;
+        font-size: 1rem;
+    }
+}

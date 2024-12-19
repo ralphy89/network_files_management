@@ -1,0 +1,21 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/hero.css' %}">
+<style>
+    #hero {
+        background: url({% static 'ressources/img/hero-bg.jpg' %}) no-repeat center center/cover;
+    }
+</style>
+<section id="hero" class="d-flex flex-column justify-content-center align-items-center text-center">
+    <div class="overlay"></div> <!-- Background Overlay -->
+    <div class="container">
+        <h1 class="hero-title">Welcome to Lab-C113</h1>
+        <p class="hero-subtitle">
+            Your one-stop solution for file sharing and application management in a local network.
+        </p>
+        <div class="hero-buttons">
+            <a href="#features" class="btn btn-primary me-3">Explore Features</a>
+            <a href="#get-started" class="btn btn-outline-light">Get Started</a>
+        </div>
+    </div>
+</section>
+
