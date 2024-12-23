@@ -16,7 +16,8 @@ DEVICES = []
 def home(request):
     template = 'home.html'
     global DEVICES
-    DEVICES = services.get_devices() # [['name', 'ip', 'mac'], ..., ...]
+    if len(DEVICES) == 0:
+        DEVICES = services.get_devices() # [['name', 'ip', 'mac'], ..., ...]
     connected_devices = len(DEVICES)
     page_object = {
         'connected_devices': connected_devices,
@@ -53,8 +54,8 @@ def upload_files(request):
             file_path = default_storage.save(f'uploads/{file.name}', file)
             saved_files.append(f"{root}{file_path}")
         print('Sharing files .... ')
-        transfer_files(saved_files)
-        return JsonResponse({'status': 'success', 'files': saved_files})
+        hosts = transfer_files(saved_files)
+        return JsonResponse({'status': 'success', 'files': saved_files, 'hosts': hosts})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 @csrf_exempt
@@ -67,23 +68,27 @@ def upload_directory(request):
         for directory_root in directories_root:
             # Check if the directory exists and is valid
             if not directory_root or not os.path.exists(directory_root) or not os.path.isdir(directory_root):
-                # return JsonResponse({'status': 'error', 'message': 'Invalid directory root.'})
-                continue
+                return JsonResponse({'status': 'error', 'message': 'Invalid directory root.'})
             saved_files.append(directory_root)
 
-        transfer_files(saved_files, True)
-        return JsonResponse({'status': 'success', 'files': saved_files})
+        hosts = transfer_files(saved_files, True)
+        return JsonResponse({'status': 'success', 'files': saved_files, 'hosts': hosts})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
 
 def transfer_files(paths, r=False):
+    hosts = {'ips': []}
     try:
         for ip in DEVICES: # [['name', 'ip', 'mac'], ..., ...]
+
             for path in paths:
                 # services.ssh_copy_file_to_remote_client(host_, ip[1], password_, path, r)
                 print(f"Sharing to {host_}@{ip[1]} : {path}")
+            hosts['ips'].append(ip[1])
+        print(f'Hosts : {hosts}')
+        return hosts
     except Exception as e:
         print(f'Error sharing files : {e}')
 

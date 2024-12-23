@@ -1,3 +1,8 @@
+// import Swal from 'sweetalert2';
+
+// or via CommonJS
+// const Swal = require('sweetalert2');
+const SUCCESS = 'success';
 
 document.addEventListener('DOMContentLoaded', () => {
     const fileDropZone = document.getElementById('file_upload_zone');
@@ -8,7 +13,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const file_list = document.getElementById('file-list');
     let files = [];
     let directories = []
+    const isDirectory = (input) =>
+        /^([a-zA-Z]:\\|\\\\)(?:[^<>:"|?*\r\n]+\\)*[^<>:"|?*\r\n]*$/.test(input) || /^(\/[^<>:"|?*\r\n]+)+\/?$/.test(input);
 
+    const shared_ip = (IPs) =>
+        IPs.map(ip => `<li style="margin-bottom: 8px; color: #8fbc8f; font-weight: 600;">${ip}</li>`).join('');
+
+    const  display_alert = data => {
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            draggable: true,
+            title: `Files/Directories shared successfully to ${data.hosts.ips.length} DEVICES : `,
+            html: `
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                       ${shared_ip(data.hosts.ips)}
+                    </ul>
+                           `,
+            customClass: {
+                popup: 'swal-popup',
+                title: 'swal-title',
+                htmlContainer: 'swal-html',
+            },
+            showConfirmButton: true,
+            confirmButtonText: 'OK',
+            timer: 24000,
+            timerProgressBar: true,
+            background: '#363132', // Futuristic dark background
+            color: '#ffffff', // Text color for contrast
+        });
+    }
     const remove_directory = (e) => {
         directories = directories.filter((d) => d !== e.target.id);
         update_file_list(files, directories);
@@ -93,7 +127,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addDirectoryPath_btn.addEventListener('click', (e) => {
         const dir = directoryInput.value;
-        dir ? update_directories(dir) : '';
+        if (isDirectory(dir)) {
+            dir ? update_directories(dir) : '';
+        } else {
+            Swal.fire({
+                draggable: true,
+                icon: "error",
+                title: "Oops...",
+                text: "Invalid directory path!!",
+                // footer: '<a href="#">Why do I have this issue?</a>'
+            });
+            directoryInput.value = '';
+        }
     });
 
     share_all_btn.addEventListener('click', () => {
@@ -116,14 +161,24 @@ document.addEventListener('DOMContentLoaded', () => {
         })
             .then((response) => {
                 if (!response.ok) {
+                    Swal.fire({
+                        draggable: true,
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Something went wrong! Try again later or contact the admin",
+                        // footer: '<a href="#">Why do I have this issue?</a>'
+                    });
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
             })
             .then((data) => {
+                if (data.status === SUCCESS) {
+                    display_alert(data)
+                    files = []
+                    update_file_list(files, directories);
+                }
                 console.log('Upload Success:', data);
-                files = []
-                update_file_list(files, directories);
             })
             .catch((error) => console.error('Upload Error:', error));
     };
@@ -135,21 +190,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         });
 
-
         fetch('/upload-d', {
             method: 'POST',
             body: formData,
         })
             .then((response) => {
                 if (!response.ok) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Something went wrong! Try again later or contact the admin",
+                        // footer: '<a href="#">Why do I have this issue?</a>'
+                    });
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
             })
             .then((data) => {
+                if (data.status === SUCCESS) {
+                    display_alert(data);
+                    directories = []
+                    update_file_list(files, directories);
+                }
                 console.log('Upload Success:', data);
-                directories = []
-                update_file_list(files, directories);
+
             })
             .catch((error) => console.error('Upload Error:', error));
     };
