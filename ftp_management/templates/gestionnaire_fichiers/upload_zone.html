@@ -23,20 +23,20 @@
                 </div>
             </div>
 
-            <!-- Column 2: Directory Upload -->
+            <!-- Column 2: Directory Path Input -->
             <div class="upload-column">
-                <div class="drag-drop-area" id="directory_upload_zone">
-                    <div class="drag-drop-content">
+                <div class="directory-path-area">
+                    <div class="path-input-content">
                         <i class="fas fa-folder-plus fa-3x"></i>
-                        <p>Drag & Drop Directories Here</p>
-                        <span>OR</span>
-                        <label for="directory_input" class="upload-button">
-                            <i class="fas fa-folder-open"></i> Browse Directories
-                        </label>
-                        <input disabled type="file" id="directory_input" webkitdirectory hidden>
+                        <p>Enter Directory Path</p>
+                        <input type="text" id="directory_path_input" placeholder="e.g., /home/user/documents" class="path-input">
+                        <button id="add_directory_path" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Directory
+                        </button>
                     </div>
                 </div>
             </div>
+
         </div>
 
         <!-- Share Buttons -->
@@ -48,10 +48,16 @@
                 <i class="fas fa-user-friends"></i> Share to Specific Devices
             </button>
         </div>
+
+        <!-- Selected Files Section -->
+        <div id="selected-files" class="selected-files-container mt-4">
+            <h3>Selected Files/Directories</h3>
+            <hr>
+            <ul id="file-list">
+                <!-- Dynamically populated by JavaScript -->
+            </ul>
+        </div>
     </div>
 </section>
 
-
-<script src="{% static 'js/upload_zone.js' %}">
-
-</script>
+<script src="{% static 'js/upload_zone.js' %}"></script>

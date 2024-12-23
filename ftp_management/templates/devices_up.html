@@ -3,60 +3,73 @@
 <link rel="stylesheet" href="{% static 'css/devices_up.css' %}">
 <section id="devices_up" class="py-5">
     <div class="container">
-        <h2 class="section-title text-center mb-5">Connected Devices <span>(4)</span></h2>
+        <h2 class="section-title text-center mb-5">Connected Devices <span>({{ connected_devices }})</span></h2>
         <div class="row justify-content-center">
             <!-- Example Device Card -->
-            <div class="col-md-4 col-lg-3 mb-4">
-                <div class="device-card">
-                    <div class="device-icon">
-                        <i class="fas fa-desktop"></i>
-                    </div>
-                    <div class="device-info">
-                        <h3 class="device-name">PC-Lab113</h3>
-                        <p class="device-ip">IP: 192.168.0.101</p>
-                        <p class="device-status">Status: <span class="text-success">Online</span></p>
+            {% for device in devices %}
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="device-card">
+                        <div class="device-icon">
+                            {% if device.0 == 'UNKNOWN' %}
+                                <i class="fas fa-desktop"></i> |
+                                <i class="fas fa-mobile-alt"></i>
+                            {% elif 'desktop' in device.0 %}
+                                <i class="fas fa-desktop"></i>
+                            {% elif 'laptop' or 'mac' in device.0 %}
+                                <i class="fas fa-laptop"></i>
+                            {% elif 'phone' or 'mobile' or 'tablet' or 'apple' in device.0 %}
+                                <i class="fas fa-mobile-phone"></i>
+                            {% else %}
+                                <i class="fas fa-laptop"></i>
+                            {% endif %}
+                        </div>
+                        <div class="device-info">
+                            <h3 class="device-name">{{ device.0}}</h3>
+                            <p class="device-ip">IP: {{ device.1  }}</p>
+                            <p class="device-ip">MAC: {{ device.2  }}</p>
+                            <p class="device-status">Status: <span class="text-success">Online</span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
 
             <!-- Add more device cards here -->
-            <div class="col-md-4 col-lg-3 mb-4">
-                <div class="device-card">
-                    <div class="device-icon">
-                        <i class="fas fa-laptop"></i>
-                    </div>
-                    <div class="device-info">
-                        <h3 class="device-name">Laptop-User1</h3>
-                        <p class="device-ip">IP: 192.168.0.102</p>
-                        <p class="device-status">Status: <span class="text-success">Online</span></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 col-lg-3 mb-4">
-                <div class="device-card">
-                    <div class="device-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="device-info">
-                        <h3 class="device-name">Phone123</h3>
-                        <p class="device-ip">IP: 192.168.0.103</p>
-                        <p class="device-status">Status: <span class="text-warning">Idle</span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-lg-3 mb-4">
-                <div class="device-card">
-                    <div class="device-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="device-info">
-                        <h3 class="device-name">Phone123</h3>
-                        <p class="device-ip">IP: 192.168.0.103</p>
-                        <p class="device-status">Status: <span class="text-warning">Idle</span></p>
-                    </div>
-                </div>
-            </div>
+{#            <div class="col-md-4 col-lg-3 mb-4">#}
+{#                <div class="device-card">#}
+{#                    <div class="device-icon">#}
+{#                        <i class="fas fa-laptop"></i>#}
+{#                    </div>#}
+{#                    <div class="device-info">#}
+{#                        <h3 class="device-name">Laptop-User1</h3>#}
+{#                        <p class="device-ip">IP: 192.168.0.102</p>#}
+{#                        <p class="device-status">Status: <span class="text-success">Online</span></p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-md-4 col-lg-3 mb-4">#}
+{#                <div class="device-card">#}
+{#                    <div class="device-icon">#}
+{#                        <i class="fas fa-mobile-alt"></i>#}
+{#                    </div>#}
+{#                    <div class="device-info">#}
+{#                        <h3 class="device-name">Phone123</h3>#}
+{#                        <p class="device-ip">IP: 192.168.0.103</p>#}
+{#                        <p class="device-status">Status: <span class="text-warning">Idle</span></p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="col-md-4 col-lg-3 mb-4">#}
+{#                <div class="device-card">#}
+{#                    <div class="device-icon">#}
+{#                        <i class="fas fa-mobile-alt"></i>#}
+{#                    </div>#}
+{#                    <div class="device-info">#}
+{#                        <h3 class="device-name">Phone123</h3>#}
+{#                        <p class="device-ip">IP: 192.168.0.103</p>#}
+{#                        <p class="device-status">Status: <span class="text-warning">Idle</span></p>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
 
         </div>
     </div>
