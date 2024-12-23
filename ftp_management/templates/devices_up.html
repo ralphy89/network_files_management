@@ -10,19 +10,25 @@
                 <div class="col-md-4 col-lg-3 mb-4">
                     <div class="device-card">
                         <div class="device-icon">
-                            {% if device.0 == 'UNKNOWN' %}
-                                <i class="fas fa-desktop"></i> |
-                                <i class="fas fa-mobile-alt"></i>
-                            {% elif 'desktop' in device.0 %}
+                            {% if device.0 == 'UNKNOWN' %} <!-- Fallback for unknown device -->
+                                <i class="fas fa-question-circle"></i>
+                            {% elif 'desktop' in device.0 or 'pc' in device.0 %}
                                 <i class="fas fa-desktop"></i>
-                            {% elif 'laptop' or 'mac' in device.0 %}
+                            {% elif 'laptop' in device.0 or 'mac' in device.0 %}
                                 <i class="fas fa-laptop"></i>
-                            {% elif 'phone' or 'mobile' or 'tablet' or 'apple' in device.0 %}
-                                <i class="fas fa-mobile-phone"></i>
+                            {% elif 'tablet' in device.0 or 'ipad' in device.0 %}
+                                <i class="fas fa-tablet-alt"></i>
+                            {% elif 'mobile' in device.0 or 'phone' in device.0 %}
+                                <i class="fas fa-mobile-alt"></i>
+                            {% elif 'tv' in device.0 or 'smart-tv' in device.0 %}
+                                <i class="fas fa-tv"></i>
+                            {% elif 'console' in device.0 or 'playstation' in device.0 or 'xbox' in device.0 %}
+                                <i class="fas fa-gamepad"></i>
                             {% else %}
-                                <i class="fas fa-laptop"></i>
+                                <i class="fas fa-mobile-alt"></i>
                             {% endif %}
                         </div>
+
                         <div class="device-info">
                             <h3 class="device-name">{{ device.0}}</h3>
                             <p class="device-ip">IP: {{ device.1  }}</p>
