@@ -211,6 +211,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     display_alert(data);
                     directories = []
                     update_file_list(files, directories);
+                } else {
+                    Swal.fire({
+                        draggable: true,
+                        icon: "error",
+                        title: "Oops...",
+                        text: `${data.message} \n"${data.directory}"`,
+                        // footer: '<a href="#">Why do I have this issue?</a>'
+                    });
+                    directoryInput.value = '';
                 }
                 console.log('Upload Success:', data);
 

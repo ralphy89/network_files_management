@@ -68,7 +68,7 @@ def upload_directory(request):
         for directory_root in directories_root:
             # Check if the directory exists and is valid
             if not directory_root or not os.path.exists(directory_root) or not os.path.isdir(directory_root):
-                return JsonResponse({'status': 'error', 'message': 'Invalid directory root.'})
+                return JsonResponse({'status': 'error', 'message': 'Invalid directory root.', 'directory': directory_root})
             saved_files.append(directory_root)
 
         hosts = transfer_files(saved_files, True)
