@@ -54,7 +54,7 @@ def upload_files(request):
             file_path = default_storage.save(f'uploads/{file.name}', file)
             saved_files.append(f"{root}{file_path}")
         print('Sharing files .... ')
-        hosts = transfer_files(saved_files)
+        hosts = transfer_files(saved_files, False)
         return JsonResponse({'status': 'success', 'files': saved_files, 'hosts': hosts})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
@@ -84,7 +84,7 @@ def transfer_files(paths, r=False):
         for ip in DEVICES: # [['name', 'ip', 'mac'], ..., ...]
 
             for path in paths:
-                # services.ssh_copy_file_to_remote_client(host_, ip[1], password_, path, r)
+                services.ssh_copy_file_to_remote_client(host_, ip[1], password_, path, r)
                 print(f"Sharing to {host_}@{ip[1]} : {path}")
             hosts['ips'].append(ip[1])
         print(f'Hosts : {hosts}')
