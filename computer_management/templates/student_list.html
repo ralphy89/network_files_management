@@ -1,0 +1,76 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/student_list.css' %}">
+
+<section id="student-list">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Registered Students</h2>
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="studentSearch" class="search-input" placeholder="Search by name, email, or computer...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="student-table">
+                <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Computer Assigned</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>
+                            <div class="student-info">
+                                <div class="student-avatar">{{ student.name|slice:":1" }}</div>
+                                <span>{{ student.name }}</span>
+                            </div>
+                        </td>
+                        <td>{{ student.email }}</td>
+                        <td>
+                            {% if student.computer %}
+                                <span class="computer-badge">
+                                    <i class="fas fa-laptop"></i>
+                                    {{ student.computer.name }}
+                                </span>
+                            {% else %}
+                                <span class="no-computer">Not Assigned</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="status-badge {% if student.computer %}active{% else %}inactive{% endif %}">
+                                {{ student.computer.status|default:"Inactive" }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-edit" title="Edit Student">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-assign" title="Assign Computer">
+                                    <i class="fas fa-laptop-code"></i>
+                                </button>
+                                <button class="btn-delete" title="Remove Student">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if not students %}
+            <div class="no-results">
+                <i class="fas fa-users-slash"></i>
+                <p>No students found</p>
+            </div>
+        {% endif %}
+    </div>
+</section>

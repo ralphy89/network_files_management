@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('ftp_management.urls')),
+    path('', include('computer_management.urls')),
     path('admin/', admin.site.urls),
 ]

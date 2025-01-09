@@ -1,0 +1,322 @@
+/* Student List Section */
+#student-list {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Futuristic Background Effect */
+#student-list::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+            45deg,
+            rgba(227, 9, 23, 0.03) 0%,
+            transparent 1px,
+            transparent 50%
+    );
+    background-size: 10px 10px;
+    animation: backgroundMove 20s linear infinite;
+}
+
+@keyframes backgroundMove {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Section Header */
+.section-header {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    position: relative;
+    padding-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(227, 9, 23, 0.5);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #e30917, transparent);
+    border-radius: 2px;
+}
+
+/* Search Bar */
+.search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 2rem;
+    font-size: 1rem;
+    color: #ffffff;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #e30917;
+    box-shadow: 0 0 20px rgba(227, 9, 23, 0.3);
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e30917;
+    text-shadow: 0 0 10px rgba(227, 9, 23, 0.5);
+}
+
+/* Table Styles */
+.table-responsive {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.student-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.student-table th {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1.2rem;
+    font-weight: 600;
+    text-align: left;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.student-table td {
+    padding: 1.2rem;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Student Info */
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.student-avatar {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #e30917, #ff1a1a);
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(227, 9, 23, 0.3);
+}
+
+/* Enhanced Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.action-buttons button {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-buttons button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    transition: 0.5s;
+}
+
+.action-buttons button:hover::before {
+    transform: translateX(100%);
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-assign {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #e30917, #ff1a1a);
+    box-shadow: 0 0 15px rgba(227, 9, 23, 0.3);
+}
+
+.action-buttons button:hover {
+    transform: translateY(-3px) scale(1.05);
+}
+
+.action-buttons button:active {
+    transform: translateY(1px);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    z-index: -1;
+    background: linear-gradient(45deg, #e30917, #ff1a1a, #e30917);
+    background-size: 200% 200%;
+    animation: borderGlow 2s linear infinite;
+}
+
+.status-badge.active {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+}
+
+.status-badge.inactive {
+    background: rgba(227, 9, 23, 0.2);
+    color: #ff1a1a;
+    text-shadow: 0 0 10px rgba(227, 9, 23, 0.5);
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* Computer Badge */
+.computer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    color: #ffffff;
+    border: 1px solid rgba(227, 9, 23, 0.3);
+    box-shadow: 0 0 15px rgba(227, 9, 23, 0.1);
+}
+
+.computer-badge i {
+    color: #e30917;
+    text-shadow: 0 0 10px rgba(227, 9, 23, 0.5);
+}
+
+/* Row Hover Effect */
+.student-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.student-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: scale(1.01);
+}
+
+/* No Results State */
+.no-results {
+    text-align: center;
+    padding: 4rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.no-results i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: #e30917;
+    text-shadow: 0 0 20px rgba(227, 9, 23, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .student-table {
+        min-width: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    #student-list {
+        padding: 3rem 0;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .search-input {
+        padding: 1rem 1rem 1rem 3rem;
+    }
+
+    .action-buttons button {
+        width: 38px;
+        height: 38px;
+    }
+}
