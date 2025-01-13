@@ -1,0 +1,72 @@
+{% load static %}
+
+<!-- Modal form -->
+<div class="modal fade " id="computer-form-modal" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card mb-0">
+                    <div class="card-header text-left">
+                       <i class="fa fa-plus-circle" ></i> <h3 class="fw-bolder text-success">Add Computer</h3>
+                    </div>
+                    <div class="card-body">
+                        <form role="form text-left">
+                            <label>Computer's Name</label>
+                            <div class="input-group mb-3 has-validation">
+                                <input
+                                        id="pc-name"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="eg. PC-01"
+                                        aria-label="Computer's name"
+                                        aria-describedby="computer-addon"
+                                        required="required"
+                                        value="PC-01"
+                                />
+                                <small id="pcNameHelp" class="form-text text-muted invalid-feedback">Please provide a valid computer name.</small>
+
+                            </div>
+                            <label>Mac address</label>
+                            <div class="input-group mb-3 has-validation">
+                                <input
+                                        id="pc-mac"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="00:1A:2B:3C:4D:5E"
+                                        aria-label="mac address"
+                                        aria-describedby="mac address-addon"
+                                        required="required"
+                                        value="00:1A:2B:3C:4D:5E"
+                                />
+                                <small id="pcMacHelp" class="form-text text-muted invalid-feedback">
+                                    <p>
+                                        Invalid mac address.<br>
+                                        Accepted format : 00:1A:2B:3C:4D:5E, 00-1A-2B-3C-4D-5E, 001A2B3C4D5E
+                                    </p>
+                                </small>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                            </div>
+                            <label for="pc-status">Status</label>
+                            <div class="input-group mb-3">
+                                <select class="form-control input-square" id="pc-status">
+                                    <option selected>Available</option>
+                                    <option>Occupied</option>
+                                    <option>Maintenance</option>
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <button id="save-computer-btn" type="button" class="btn btn-round btn-success btn-lg w-100 mt-4 mb-0">
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

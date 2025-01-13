@@ -16,6 +16,7 @@
                 <thead>
                 <tr>
                     <th>Student Name</th>
+                    <th>Code</th>
                     <th>Email</th>
                     <th>Computer Assigned</th>
                     <th>Status</th>
@@ -31,20 +32,23 @@
                                 <span>{{ student.name }}</span>
                             </div>
                         </td>
+                        <td>
+                            {{ student.code }}
+                        </td>
                         <td>{{ student.email }}</td>
                         <td>
-                            {% if student.computer %}
+                            {% if student.computer_id %}
                                 <span class="computer-badge">
                                     <i class="fas fa-laptop"></i>
-                                    {{ student.computer.name }}
+                                    {{ student.computer_id }}
                                 </span>
                             {% else %}
                                 <span class="no-computer">Not Assigned</span>
                             {% endif %}
                         </td>
                         <td>
-                            <span class="status-badge {% if student.computer %}active{% else %}inactive{% endif %}">
-                                {{ student.computer.status|default:"Inactive" }}
+                            <span class="status-badge {% if student.status %}active{% else %}inactive{% endif %}">
+                                {{ student.status|default:"Inactive" }}
                             </span>
                         </td>
                         <td>
@@ -52,12 +56,19 @@
                                 <button class="btn-edit" title="Edit Student">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn-assign" title="Assign Computer">
-                                    <i class="fas fa-laptop-code"></i>
-                                </button>
-                                <button class="btn-delete" title="Remove Student">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+
+{#                                <button class="btn-delete" title="Remove Student">#}
+{#                                    <i class="fas fa-trash-alt"></i>#}
+{#                                </button>#}
+                                {% if student.status == 'Active' %}
+                                    <button value="{{ student.code }}"  id="switch-btn-active" class="btn btn-assign" title="Switch student status" >
+                                        <i class="fas fa-power-off"></i>
+                                    </button>
+                                {% else %}
+                                    <button value="{{ student.code }}" id="switch-btn-inactive" class="btn btn-warning" title="Switch student status" >
+                                        <i class="fas fa-power-off"></i>
+                                    </button>
+                                {% endif %}
                             </div>
                         </td>
                     </tr>

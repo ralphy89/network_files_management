@@ -14,17 +14,17 @@
                             <span class="status {{ computer.status|lower }}">{{ computer.status }}</span>
                         </div>
                         <div class="card-body">
-                            <p><i class="fas fa-network-wired"></i> IP: {{ computer.ip_address }}</p>
-                            <p><i class="fas fa-barcode"></i> MAC: {{ computer.mac_address }}</p>
+{#                            <p><i class="fas fa-network-wired"></i> IP: {{ computer.ip_address }}</p>#}
+                            <p><i class="fas fa-barcode"></i> MAC: {{ computer.mac_adr }}</p>
                         </div>
                         <div class="card-footer">
-                            {% if computer.student %}
+                            {% if computer.student_assigned %}
                                 <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Assigned to: {{ computer.student.name }}
+                                        Assigned to: {{ computer.student_assigned.name }}
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><strong>Email:</strong> {{ computer.student.email }}</li>
+                                        <li><strong>Email - code:</strong> {{ computer.student_assigned.email }}</li>
                                     </ul>
                                 </div>
                             {% else %}
