@@ -32,7 +32,6 @@ def home(request):
 
 def files_management(request):
     global DEVICES
-
     template = 'gestionnaire_fichiers/file_management.html'
     if len(DEVICES) == 0:
         DEVICES = services.get_devices()
@@ -79,10 +78,11 @@ def upload_directory(request):
 
 
 def transfer_files(paths, r=False):
+
     hosts = {'ips': []}
     try:
+        DEVICES = services.get_devices()
         for ip in DEVICES: # [['name', 'ip', 'mac'], ..., ...]
-
             for path in paths:
                 services.ssh_copy_file_to_remote_client(host_, ip[1], password_, path, r)
                 print(f"Sharing to {host_}@{ip[1]} : {path}")
