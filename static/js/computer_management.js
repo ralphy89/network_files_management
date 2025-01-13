@@ -24,7 +24,7 @@ student_email.addEventListener('change', (e) => {
 })
 
 const refreshPage = () => {
-    window.location.reload()
+    window.location.reload(true)
 }
 
 const addComputer = (pc_name_, pc_mac_, pc_status_) => {

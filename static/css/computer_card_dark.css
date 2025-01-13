@@ -1,0 +1,194 @@
+/* Section Container */
+#computers {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: 700;
+    color: #f8f9fa;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: #e30917;
+    border-radius: 2px;
+}
+
+/* Computer Card */
+.computer-card {
+    background: #1e1e1e;
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    height: 100%;
+}
+
+.computer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
+}
+
+/* Card Header */
+.card-header {
+    background: #2c2c2c;
+    padding: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h5 {
+    margin: 0;
+    font-weight: 600;
+    color: #f8f9fa;
+}
+
+/* Status Badges */
+.status {
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.available {
+    background: #218838;
+    color: #d4edda;
+}
+
+.occupied {
+    background: #856404;
+    color: #fff3cd;
+}
+
+.maintenance {
+    background: #721c24;
+    color: #f8d7da;
+}
+
+/* Card Body */
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-body p {
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    color: #bdbdbd;
+}
+
+.card-body i {
+    margin-right: 0.75rem;
+    color: #e30917;
+    width: 20px;
+    text-align: center;
+}
+
+/* Card Footer */
+.card-footer {
+    background: #2c2c2c;
+    padding: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown Styling */
+.dropdown-toggle {
+    width: 100%;
+    background: #343a40;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    text-align: left;
+    color: #f8f9fa;
+}
+
+.dropdown-toggle:hover {
+    background: #495057;
+}
+
+.dropdown-menu {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    background: #2c2c2c;
+}
+
+.dropdown-menu li {
+    padding: 0.5rem;
+    color: #bdbdbd;
+}
+
+.dropdown-menu strong {
+    color: #f8f9fa;
+    margin-right: 0.5rem;
+}
+
+/* Unassigned State */
+.unassigned {
+    display: block;
+    text-align: center;
+    padding: 0.6rem;
+    background: #343a40;
+    color: #bdbdbd;
+    border-radius: 0.5rem;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    #computers {
+        padding: 3rem 0;
+    }
+
+    .computer-card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .card-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .status {
+        margin-top: 0.75rem;
+    }
+}
+
+/* Modern Touch: Shimmer Effect for Loading State */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.computer-card.loading {
+    background: linear-gradient(90deg, #2c2c2c 25%, #1e1e1e 50%, #2c2c2c 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+}
