@@ -23,6 +23,7 @@ class Student(models.Model):
     STATUS = {
         'A': 'Active',
         'I': 'Inactive',
+        'D': 'Deleted'
     }
     student_id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -30,7 +31,10 @@ class Student(models.Model):
     email = models.EmailField(max_length=255, unique=True)
     status = models.CharField(max_length=15, choices=STATUS, default=STATUS['I'])
     computer = models.ForeignKey(Computer, on_delete=models.PROTECT, null=True, to_field='name')
+    option = models.CharField(max_length=255, null=True)
     def __str__(self):
         return f"{self.code} : {self.email} : {self.computer}"
 
+    class Meta:
+        ordering = ['-student_id']
 

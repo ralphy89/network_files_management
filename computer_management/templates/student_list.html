@@ -47,25 +47,24 @@
                             {% endif %}
                         </td>
                         <td>
-                            <span class="status-badge {% if student.status %}active{% else %}inactive{% endif %}">
+                            <span class="status-badge {% if student.status == 'Active' %}active{% else %}inactive{% endif %}">
                                 {{ student.status|default:"Inactive" }}
                             </span>
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-edit" title="Edit Student">
+                                <button disabled class="btn-edit" title="Edit Student">
                                     <i class="fas fa-edit"></i>
                                 </button>
-
-{#                                <button class="btn-delete" title="Remove Student">#}
+{#                                <button disabled class="btn-delete" title="Remove Student">#}
 {#                                    <i class="fas fa-trash-alt"></i>#}
 {#                                </button>#}
                                 {% if student.status == 'Active' %}
-                                    <button value="{{ student.code }}"  id="switch-btn-active" class="btn btn-success" title="Switch student status" >
-                                        <i class="fas fa-power-off"></i>
+                                    <button value="{{ student.code }}" id="switch-btn-active"  class="btn btn-success switch-btn-active" title="Switch student status" >
+                                        <i  class="fas fa-power-off"></i>
                                     </button>
                                 {% else %}
-                                    <button value="{{ student.code }}" id="switch-btn-inactive" class="btn btn-warning" title="Switch student status" >
+                                    <button value="{{ student.code }}" id="switch-btn-inactive" class="btn btn-warning switch-btn-inactive" title="Switch student status" >
                                         <i class="fas fa-power-off"></i>
                                     </button>
                                 {% endif %}

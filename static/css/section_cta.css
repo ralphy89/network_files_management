@@ -33,12 +33,12 @@
 
 /* Register Student Button */
 #btn-register-student {
-    background: #e30917 !important;
+    background: #1c3e4b !important;
     color: white !important;
 }
 
 #btn-register-student:hover {
-    background: #ff1a1a !important;
+    background: #23576b !important;
 }
 
 /* Show Registered Students Button */

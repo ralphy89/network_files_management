@@ -58,7 +58,8 @@ def addStudent(request):
             code=POST_data['code'],
             email=POST_data['email'],
             status=POST_data['status'],
-            computer=computer
+            computer=computer,
+            option=POST_data['option']
         )
 
         student.save()
