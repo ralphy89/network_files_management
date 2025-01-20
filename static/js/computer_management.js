@@ -133,7 +133,7 @@ const cleanModal = () => {
     save_student_btn.value = '';
     modal_title_h3.innerHTML = 'Register Student';
     save_student_btn.name = ''
-    student_status.disabled = ''
+    // student_status.disabled = 'disabled'
 
     studentModal.hide();
 }

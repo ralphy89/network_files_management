@@ -61,7 +61,7 @@ def addComputer(request):
         POST_data = json.loads(request.POST['computer'])
         computer = Computer(name=POST_data['name'], mac_adr=POST_data['mac'], status=POST_data['status'])
         computer.save()
-        computers_list = json.dumps(list(Computer.objects.all().values()))
+        computers_list = json.dumps(DateTimeEncoder().encode(list(Computer.objects.all().values())))
         return JsonResponse({'status': 'success', 'computers': computers_list})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
@@ -72,27 +72,33 @@ def addStudent(request):
         POST_data = json.loads(request.POST['student'])
         computer = Computer.objects.get(name=POST_data['computer'])
 
-
-        if POST_data['status'] == 'Active':
-            infos = {
-                'email': POST_data['email'] + ' - ' + POST_data['code'],
-                'name' : POST_data['name']
-            }
-            computer.student_assigned = infos
-            computer.status = 'Occupied'
-            computer.save()
-
         student = Student(
             name=POST_data['name'],
             code=POST_data['code'],
             email=POST_data['email'],
-            status=POST_data['status'],
+            status='Inactive',
             computer=computer,
             option=POST_data['option']
         )
-
         student.save()
-        students_list = json.dumps(list(Student.objects.all().values()))
+
+        # if POST_data['status'] == 'Active':
+        #     infos = {
+        #         'email': POST_data['email'] + ' - ' + POST_data['code'],
+        #         'name' : POST_data['name']
+        #     }
+            # history = History(
+            #     student= student,
+            #     computer= computer,
+            #     title=f'{student.code} used {computer.name}',
+            #     description=POST_data['comment'],
+            # )
+            # history.save()
+            # student.curr_hist_id = history.history_id
+            # computer.student_assigned = infos
+            # computer.status = 'Occupied'
+            # computer.save()
+        students_list = json.dumps(DateTimeEncoder().encode(list(Student.objects.all().values())))
         return JsonResponse({'status': 'success', 'students': students_list})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
@@ -141,7 +147,6 @@ def updateStudentStatus(request):
 def updateStudent(request):
     if request.method == 'POST':
         POST_data = json.loads(request.POST['student'])
-        print(POST_data)
         code = POST_data['prev_code']
         student = Student.objects.get(code=code)
         computer = Computer.objects.get(name=POST_data['computer'])
