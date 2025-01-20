@@ -21,6 +21,7 @@
                     <th>Computer Assigned</th>
                     <th>Status</th>
                     <th>Actions</th>
+                    <th>History</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,22 +54,34 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button disabled class="btn-edit" title="Edit Student">
+                                <button value="{{ student.code }}" class="btn-edit" title="Edit Student">
                                     <i class="fas fa-edit"></i>
                                 </button>
 {#                                <button disabled class="btn-delete" title="Remove Student">#}
 {#                                    <i class="fas fa-trash-alt"></i>#}
 {#                                </button>#}
                                 {% if student.status == 'Active' %}
-                                    <button value="{{ student.code }}" id="switch-btn-active"  class="btn btn-success switch-btn-active" title="Switch student status" >
+                                    <button value="{{ student.code }}" id="switch-btn-active"
+                                            class="btn btn-success switch-btn-active" title="Switch student status to INACTIVE">
                                         <i  class="fas fa-power-off"></i>
                                     </button>
                                 {% else %}
-                                    <button value="{{ student.code }}" id="switch-btn-inactive" class="btn btn-warning switch-btn-inactive" title="Switch student status" >
+                                    <button value="{{ student.code }}" id="switch-btn-inactive"
+                                            class="btn btn-warning switch-btn-inactive" title="Switch student status to ACTIVE" >
                                         <i class="fas fa-power-off"></i>
                                     </button>
                                 {% endif %}
                             </div>
+                        </td>
+                        <td>
+                            {% if student.status == 'Active' %}
+                             <i class="fas fa-dot-circle" style="color: #5af55a" title="active"></i>
+                            {% else %}
+                                <p class="text-center text-info">
+                                <i class="fas fa-history"></i>
+                                <i>Since {{ student.student_history }}</i>
+                                </p>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

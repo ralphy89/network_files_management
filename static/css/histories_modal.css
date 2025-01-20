@@ -1,0 +1,212 @@
+/* Modal Styles */
+.modal-content {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 1rem 1rem 0 0;
+}
+
+.modal-title {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-title i {
+    color: #e30917;
+    text-shadow: 0 0 10px rgba(227, 9, 23, 0.5);
+}
+
+.btn-close {
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 0;
+    max-height: 70vh;
+}
+
+/* History Container */
+.history-container {
+    padding: 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Scrollbar Styles */
+.scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background: #e30917;
+    border-radius: 3px;
+}
+
+/* History Item */
+.history-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* User Icon */
+.history-item i {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #e30917, #ff1a1a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    box-shadow: 0 0 15px rgba(227, 9, 23, 0.3);
+}
+
+/* Info Section */
+.history-item .info {
+    color: #ffffff;
+}
+
+.history-item .info p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.history-item .info .description {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Timestamp */
+.history-item .timestamp {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* Modal Footer */
+.modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.25rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 1rem 1rem;
+}
+
+/* Button Styles */
+.modal-footer .btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.modal-footer .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.modal-footer .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.modal-footer .btn-primary {
+    background: linear-gradient(135deg, #e30917, #ff1a1a);
+    color: white;
+    box-shadow: 0 0 15px rgba(227, 9, 23, 0.3);
+}
+
+.modal-footer .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(227, 9, 23, 0.4);
+}
+
+/* Animation for modal opening */
+.modal.fade .modal-dialog {
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .history-item {
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+    }
+
+    .history-item .timestamp {
+        grid-column: 2;
+        justify-self: start;
+        margin-top: 0.5rem;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+    }
+
+    .history-container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .history-item {
+        padding: 1rem;
+    }
+
+    .history-item i {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+
+    .modal-footer .btn {
+        padding: 0.5rem 1.25rem;
+        font-size: 0.9rem;
+    }
+}

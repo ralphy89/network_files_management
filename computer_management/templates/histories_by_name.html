@@ -1,0 +1,29 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/histories_modal.css' %}">
+<!-- Modal HTML -->
+<div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="historyModalLabel"><i class="fas fa-history me-2"></i>Computer History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="history-container" class="history-container scrollbar">
+
+                    <!-- Add more history items here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" disabled title="Export history">Export History(Soon)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{#<!-- Add this button somewhere in your page to trigger the modal -->#}
+{#<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#historyModal">#}
+{#    View Computer History#}
+{#</button>#}

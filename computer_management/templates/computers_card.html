@@ -10,8 +10,22 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                     <div class="computer-card">
                         <div class="card-header-pc">
-                            <h5>{{ computer.name }}</h5>
-                            <span class="status {{ computer.status|lower }}">{{ computer.status }}</span>
+
+                                <h5>
+                                    <p>
+                                        {{ computer.name }}
+                                    </p>
+                                </h5>
+
+                            <div>
+                                <i aria-valuetext="{{ computer.name }}" class="fas fa-clock-rotate-left fa-spin history-btn"
+                                   style="color: white"
+                                   title="history"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#historyModal">
+                                </i>
+                                <span class="status {{ computer.status|lower }}">{{ computer.status }}</span>
+                            </div>
                         </div>
                         <div class="card-body">
 {#                            <p><i class="fas fa-network-wired"></i> IP: {{ computer.ip_address }}</p>#}
