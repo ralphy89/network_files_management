@@ -75,7 +75,7 @@ def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str,
     finally:
         client.close()
         print("SSH connection closed.\n")
-        return ip
+
 
 
 
