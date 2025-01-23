@@ -150,6 +150,12 @@ document.addEventListener('DOMContentLoaded', () => {
         files_.forEach((file) => {
             formData.append('files[]', file); // Add files to the FormData object
         });
+        Swal.fire({
+            title: 'Loading...',
+            html: '<i class="fas fa-spinner fa-spin" style="font-size:24px"></i>',
+            allowOutsideClick: false, // Prevent closing the popup by clicking outside
+            showConfirmButton: false // Hide the confirm button
+        });
         fetch('/upload-f', {
             method: 'POST',
             body: formData,
@@ -169,6 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then((data) => {
                 if (data.status === SUCCESS) {
+                    // Close the loading popup
+                    Swal.close();
                     display_alert(data)
                     files = []
                     update_file_list(files, directories);
