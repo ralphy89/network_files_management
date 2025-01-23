@@ -4,6 +4,8 @@ import time
 from os import system
 from scp import SCPClient
 adapter_name = 'wireless lan adapter wi-fi:'
+default_dest_folder = 'LAB-C113-RESSOURCES'
+
 def set_fingerprint(host, ip):
     # Construct the SSH command with StrictHostKeyChecking=accept-new to accept the fingerprint and exit
     command = [
@@ -62,9 +64,9 @@ def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str,
         # Now, use SCP to copy the file
         with SCPClient(client.get_transport()) as scp:
             print(f"Copying {file} to remote server...")
-            scp.put(file, './LAB-C113-RESSOURCES/', r)  # Upload file to the remote directory
+            scp.put(file, f'./{default_dest_folder}/', r)  # Upload file to the remote directory
 
-        print(f"File '{file}' copied successfully to {ip}:./LAB-C113-RESSOURCES/")
+        print(f"File '{file}' copied successfully to {ip}:./{default_dest_folder}/")
 
     except Exception as e:
         print(f"Error : {e}")
@@ -162,16 +164,24 @@ def get_devices():
 
 
 
-def createFileDirectory(fileName, dir:bool, host, ip):
+def createFileDirectory(fileName:str, dir:bool, host, ip, password):
     print(f"\nCreating file/folder {fileName} .....")
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
     try:
         set_fingerprint(host, ip)
         client.connect(ip, username=host, password=password)
-        stdin, stdout, stderr = client.exec_command('dir')  # Example command
-        print("OK: Connected to : " + stdout.read().decode())
+        stdin, stdout, stderr = client.exec_command('dir /b')  # Example command
+        result = stdout.read().decode().split()
+        if fileName in result:
+            print(f"File/Directory {fileName} already created")
+        else :
+            if dir:
+                client.exec_command(f'mkdir {fileName}')
+                print(f"File/Directory {fileName} created")
+            else:
+                print('Not configured yet')
+
     except Exception as e:
         print(f"Error ({host}@{ip}): {e}")
     finally:
