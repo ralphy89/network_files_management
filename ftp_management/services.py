@@ -57,7 +57,7 @@ def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str,
         print(f"\nEstablishing SSH connection to {host}@{ip}.....")
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(ip, username=host, password=password, banner_timeout=500)
+        client.connect(ip, username=host, password=password)
         print(f"OK: Connected to {host}@{ip}")
 
         # Now, use SCP to copy the file
