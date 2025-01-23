@@ -83,12 +83,13 @@ def transfer_files(paths, r=False):
     try:
         DEVICES = services.get_devices()
         for ip in DEVICES: # [['name', 'ip', 'mac'], ..., ...]
+            print(f"Sharing to {host_}@{ip[1]} : {path}")
             for path in paths:
                 createDirectoryIfNotExist(services.default_dest_folder, host=host_, ip=ip[1], password=password_)
-                services.ssh_copy_file_to_remote_client(host_, ip[1], password_, path, r)
-                print(f"Sharing to {host_}@{ip[1]} : {path}")
-            hosts['ips'].append(ip[1])
-        print(f'Hosts : {hosts}')
+                temp_ip = services.ssh_copy_file_to_remote_client(host_, ip[1], password_, path, r)
+                if temp_ip == ip[1]:
+                    hosts['ips'].append(temp_ip)
+        print(f'Host succeeded : {hosts}')
         return hosts
     except Exception as e:
         print(f'Error sharing files : {e}')

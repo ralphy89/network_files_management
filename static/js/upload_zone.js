@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
             .then((response) => {
                 if (!response.ok) {
+                    Swal.close();
                     Swal.fire({
                         draggable: true,
                         icon: "error",

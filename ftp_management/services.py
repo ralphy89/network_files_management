@@ -51,8 +51,7 @@ def ssh_connection(host: str, ip: str, password: str):
 
 def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str, r=False):
     # First, ensure the fingerprint is set
-    set_fingerprint(host, ip)
-
+    # set_fingerprint(host, ip)
     try:
         # Establish SSH connection using paramiko
         print(f"\nEstablishing SSH connection to {host}@{ip}.....")
@@ -74,6 +73,8 @@ def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str,
     finally:
         client.close()
         print("SSH connection closed.\n")
+        return ip
+
 
 
 def get_my_ip():
@@ -165,11 +166,9 @@ def get_devices():
 
 
 def createFileDirectory(fileName:str, dir:bool, host, ip, password):
-    print(f"\nCreating file/folder {fileName} .....")
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
-        set_fingerprint(host, ip)
         client.connect(ip, username=host, password=password)
         stdin, stdout, stderr = client.exec_command('dir /b')  # Example command
         result = stdout.read().decode().split()
@@ -177,6 +176,7 @@ def createFileDirectory(fileName:str, dir:bool, host, ip, password):
             print(f"File/Directory {fileName} already created")
         else :
             if dir:
+                print(f"\nCreating file/folder {fileName} .....")
                 client.exec_command(f'mkdir {fileName}')
                 print(f"File/Directory {fileName} created")
             else:
