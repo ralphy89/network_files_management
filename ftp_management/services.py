@@ -162,7 +162,20 @@ def get_devices():
 
 
 
-print(get_devices())
+def createFileDirectory(fileName, dir:bool, host, ip):
+    print(f"\nCreating file/folder {fileName} .....")
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    try:
+        set_fingerprint(host, ip)
+        client.connect(ip, username=host, password=password)
+        stdin, stdout, stderr = client.exec_command('dir')  # Example command
+        print("OK: Connected to : " + stdout.read().decode())
+    except Exception as e:
+        print(f"Error ({host}@{ip}): {e}")
+    finally:
+        client.close()
 
 
 # ssh_connection(host_, ip_[0], password_)

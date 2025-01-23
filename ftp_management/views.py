@@ -92,4 +92,10 @@ def transfer_files(paths, r=False):
     except Exception as e:
         print(f'Error sharing files : {e}')
 
+def createFileIfNotExist(fileName):
+    try:
+        print("Creating file if not exist ....\n")
+    except Exception as e:
+        print(f'Error creating file : {e}')
+
 
