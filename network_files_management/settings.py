@@ -83,9 +83,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'USER': 'root',
-        # 'PASSWORD': 'AdminL@BC113!@#',
-        'PASSWORD' : 'RalphSQL89$'
-
+        'PASSWORD': 'AdminL@BC113!@#',
     }
 }
 
