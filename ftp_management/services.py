@@ -64,11 +64,10 @@ def ssh_copy_file_to_remote_client(host: str, ip: str, password: str, file: str,
         with SCPClient(client.get_transport()) as scp:
             print(f"Copying {file} to remote server...")
             scp.put(file, f'./{default_dest_folder}/', r)  # Upload file to the remote directory
-
-        print(f"File '{file}' copied successfully to {ip}:./{default_dest_folder}/")
-        client.close()
-        print("SSH connection closed.\n")
-        return ip
+            print(f"File '{file}' copied successfully to {ip}:./{default_dest_folder}/")
+            client.close()
+            print("SSH connection closed.\n")
+            return ip
 
     except Exception as e:
         print(f"Error : {e}")
