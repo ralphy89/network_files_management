@@ -35,7 +35,7 @@ def get_histories(request):
     if request.method == 'POST':
         POST_data = json.loads(request.POST['name'])['name']
         histories = list(History.objects.filter(computer__name=POST_data).values())
-        histories_list = json.dumps(DateTimeEncoder().encode(histories))
+        histories_list = DateTimeEncoder().encode(histories)
         return JsonResponse({'status': 'success', 'histories': histories_list})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
@@ -61,7 +61,7 @@ def addComputer(request):
         POST_data = json.loads(request.POST['computer'])
         computer = Computer(name=POST_data['name'], mac_adr=POST_data['mac'], status=POST_data['status'])
         computer.save()
-        computers_list = json.dumps(DateTimeEncoder().encode(list(Computer.objects.all().values())))
+        computers_list = DateTimeEncoder().encode(list(Computer.objects.all().values()))
         return JsonResponse({'status': 'success', 'computers': computers_list})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
@@ -71,11 +71,15 @@ def addStudent(request):
     if request.method == 'POST':
         POST_data = json.loads(request.POST['student'])
         computer = Computer.objects.get(name=POST_data['computer'])
-
+        name = str(POST_data['name']).lower().split()
+        new_name = ''
+        for n in name:
+            new_name += f"{n.capitalize()} "
+        name = new_name.strip()
         student = Student(
-            name=POST_data['name'],
-            code=POST_data['code'],
-            email=POST_data['email'],
+            name=name,
+            code=str(POST_data['code']).upper(),
+            email=str(POST_data['email']).lower(),
             status='Inactive',
             computer=computer,
             option=POST_data['option']
@@ -98,7 +102,7 @@ def addStudent(request):
             # computer.student_assigned = infos
             # computer.status = 'Occupied'
             # computer.save()
-        students_list = json.dumps(DateTimeEncoder().encode(list(Student.objects.all().values())))
+        students_list = DateTimeEncoder().encode(list(Student.objects.all().values()))
         return JsonResponse({'status': 'success', 'students': students_list})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
@@ -160,3 +164,30 @@ def updateStudent(request):
     return JsonResponse({'status': 'success'})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+@csrf_exempt
+def searchStudent(request):
+    if request.method == 'POST':
+        POST_data = str(json.loads(request.POST['query'])['arg']).strip()
+        result = None
+        if len(POST_data) > 0:
+            result = Student.objects.filter(name__regex=POST_data)
+            if (len(result) == 0):
+                result = Student.objects.filter(email__regex=POST_data)
+                if (len(result) == 0):
+                    result = Student.objects.filter(code__regex=POST_data)
+                    if len(result) == 0:
+                        result = Student.objects.filter(computer__name__regex=POST_data)
+
+        print(result)
+        if result != None:
+            result = DateTimeEncoder().encode(list(result.values()))
+            print(result)
+            return JsonResponse({'status': 'success', 'result': result})
+        else:
+            return JsonResponse({'status': 'success', 'message': 'no result'})
+
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+

@@ -1,10 +1,11 @@
 const SUCCESS = 'success';
-const ERROR = 'error'
+const ERROR = 'error';
 const save_computer_btn = document.getElementById('save-computer-btn');
 const pc_name = document.getElementById('pc-name');
 const pc_mac = document.getElementById('pc-mac');
 const pc_status = document.getElementById('pc-status');
-
+const table_body_student = document.getElementById('table-body-student');
+const student_search = document.getElementById('studentSearch');
 const save_student_btn = document.getElementById('save-student-btn');
 const student_name = document.getElementById('student-name');
 const student_code = document.getElementById('student-code');
@@ -61,6 +62,10 @@ const  display_alert = (data_name, data, type, response=null) => {
         timerProgressBar: true,
         background: '#363132', // Futuristic dark background
         color: '#ffffff', // Text color for contrast
+    }).then(result => {
+        if(result.isConfirmed){
+            refreshPage()
+        }
     });
 
 }
@@ -136,6 +141,7 @@ const cleanModal = () => {
     // student_status.disabled = 'disabled'
 
     studentModal.hide();
+
 }
 const addStudent = (name_, code_, email_, status_, computer_, option_, update=false) => {
     refresh_after_close_btn("btn-close-student-form");
@@ -246,74 +252,25 @@ const  confirm_alert = (msg, disabled_comment, callBack) => {
 }
 
 
-switch_btn_inactive ? switch_btn_inactive.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        if(e.target.value){
-            const code = e.target.value;
-            confirm_alert(`Student ${code} will be set to ACTIVE`, false,(comment) => {
+table_body_student.addEventListener('click', (e) => {
+    const target = e.target;
+    const button = target.tagName === 'BUTTON' ? target : target.closest('button');
+
+    if (!button) return; // If no button is found, exit early
+
+    if (button.classList.contains('switch-btn-inactive')) {
+        const code = button.value || '';
+        if (code) {
+            confirm_alert(`Student ${code} will be set to ACTIVE`, false, (comment) => {
                 const dataToSend = JSON.stringify({
                     code: code,
                     status: 'Inactive',
-                    comment: comment
+                    comment: comment,
                 });
 
-                const formData = new FormData()
+                const formData = new FormData();
                 formData.append('update', dataToSend);
-                fetch('update-student-status', {
-                    method: 'POST',
-                    body: formData,
-                })
-                    .then((response) => {
-                        if(!response.ok) {
-                            Swal.fire({
-                                title: "Inactive!",
-                                text: `Student ${code} is still INACTIVE, try later or contact the administrator\nMessage : ${response.status}`,
-                                icon: ERROR
-                            });
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then((data) => {
-                        if(data.status === SUCCESS) {
 
-                            Swal.fire({
-                                title: "Active!",
-                                text: `Student ${code} is Active`,
-                                icon: SUCCESS,
-                                showConfirmButton: true,
-                                confirmButtonText: "Close Message"
-                            }).then(result => {
-                                refreshPage()
-                            });
-
-                        }
-                    })
-                    .catch((error) => console.error('Fetching Error :', error))
-            });
-
-        }
-        else {
-            btn.click();
-        }
-    })
-}
-): '';
-
-switch_btn_active ? switch_btn_active.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-    if (e.target.value) {
-        const code = e.target.value
-        confirm_alert(`Student ${code} will be set to INACTIVE (Confirm if student free his/her assigned computer)`,
-            "disabled", () => {
-
-                const dataToSend = JSON.stringify({
-                    code: code,
-                    status: 'Active',
-                });
-                console.log(dataToSend)
-                const formData = new FormData()
-                formData.append('update', dataToSend);
                 fetch('update-student-status', {
                     method: 'POST',
                     body: formData,
@@ -321,9 +278,9 @@ switch_btn_active ? switch_btn_active.forEach(btn => {
                     .then((response) => {
                         if (!response.ok) {
                             Swal.fire({
-                                title: "Active!",
-                                text: `Student ${code} is still ACTIVE, try later or contact the administrator\nMessage : ${response.status}`,
-                                icon: ERROR
+                                title: "Inactive!",
+                                text: `Student ${code} is still INACTIVE, try later or contact the administrator\nMessage: ${response.status}`,
+                                icon: "error",
                             });
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
@@ -332,38 +289,80 @@ switch_btn_active ? switch_btn_active.forEach(btn => {
                     .then((data) => {
                         if (data.status === SUCCESS) {
                             Swal.fire({
-                                title: "Inactive!",
-                                text: `Student ${code} is Inactive`,
+                                title: "Active!",
+                                text: `Student ${code} is Active`,
                                 icon: SUCCESS,
                                 showConfirmButton: true,
-                                confirmButtonText: "Close Message"
-                            }).then(result => {
-                                refreshPage()
+                                confirmButtonText: "Close Message",
+                            }).then(() => {
+                                refreshPage();
                             });
                         }
                     })
-                    .catch((error) => console.error('Fetching Error :', error))
-        });
-
-    }   else {
-        btn.click();
+                    .catch((error) => console.error('Fetching Error:', error));
+            });
+        } else {
+            button.click(); // Re-click the button if value is empty
+        }
     }
-    })
-}
-): '';
+    else if (button.classList.contains('switch-btn-active')) {
+        const code = button.value || '';
+        if (code) {
+            confirm_alert(`Student ${code} will be set to INACTIVE (Confirm if student freed their assigned computer)`,
+                "disabled", () => {
+                    const dataToSend = JSON.stringify({
+                        code: code,
+                        status: 'Active',
+                    });
 
-btn_edit ? btn_edit.forEach(btn => {
+                    const formData = new FormData();
+                    formData.append('update', dataToSend);
 
+                    fetch('update-student-status', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                Swal.fire({
+                                    title: "Active!",
+                                    text: `Student ${code} is still ACTIVE, try later or contact the administrator\nMessage: ${response.status}`,
+                                    icon: "error",
+                                });
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            if (data.status === SUCCESS) {
+                                Swal.fire({
+                                    title: "Inactive!",
+                                    text: `Student ${code} is Inactive`,
+                                    icon: SUCCESS,
+                                    showConfirmButton: true,
+                                    confirmButtonText: "Close Message",
+                                }).then(() => {
+                                    refreshPage();
+                                });
+                            }
+                        })
+                        .catch((error) => console.error('Fetching Error:', error));
+                });
+        } else {
+            button.click(); // Re-click the button if value is empty
+        }
+    }
+    else if (button.classList.contains('btn-edit')) {
+        console.log(button.value)
+        const code = button.value || '';
+        if (code) {
+            modal_title_h3.innerHTML = 'Update Student';
 
-    btn.addEventListener('click', (e) => {
-        modal_title_h3.innerHTML = 'Update Student';
-
-        if (e.target.value){
-            const code = e.target.value;
             const dataToSend = JSON.stringify({
                 code: code,
             });
-            const formData = new FormData()
+
+            const formData = new FormData();
             formData.append('student', dataToSend);
             fetch('get-student', {
                 method: 'POST',
@@ -373,34 +372,38 @@ btn_edit ? btn_edit.forEach(btn => {
                     if (!response.ok) {
                         Swal.fire({
                             title: "Active!",
-                            text: `Error fetching data<br>Message : ${response.status}`,
-                            icon: ERROR
+                            text: `Error fetching data<br>Message: ${response.status}`,
+                            icon: "error",
                         });
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then((data) => {
+                    console.log(data)
+
                     if (data.status === SUCCESS) {
                         const student = JSON.parse(data.student);
                         student_name.value = student.name;
                         student_code.value = student.code;
-                        student_status.value = student.status ;
-                        student_status.disabled = "disabled"
+                        student_status.value = student.status;
+                        student_status.disabled = true;
                         student_email.value = student.email;
                         student_computer.value = student.computer_id;
                         student_option.value = student.option;
                         save_student_btn.value = 'update-btn';
-                        save_student_btn.name = code
-                        studentModal.show()
+                        save_student_btn.name = code;
+                        console.log(code)
+                        studentModal.show();
                     }
                 })
-                .catch((error) => console.error('Fetching Error :', error))
+                .catch((error) => console.error('Fetching Error:', error));
         } else {
-            btn.click();
+            button.click(); // Re-click the button if value is empty
         }
-    })
-}) : ''
+    }
+});
+
 
 const formatHistoryDate = (start_date, end_date) => {
     const s_date = new Date(start_date);
@@ -482,7 +485,7 @@ history_btn ? history_btn.forEach((btn) => {
                 .then((data) => {
                     if (data.status === SUCCESS) {
 
-                        const histories = JSON.parse(JSON.parse(data.histories))
+                        const histories = JSON.parse(data.histories)
                         display_history(histories);
                     }
                 })
@@ -492,6 +495,114 @@ history_btn ? history_btn.forEach((btn) => {
         }
     });
 }): '';
+
+
+const display_search_result = (result) => {
+    if (result.length !== 0) {
+        table_body_student.innerHTML = ''; // Clear previous content
+        let rows = '';
+        result.forEach(st => {
+            rows += `
+                <tr>
+                    <td>
+                        <div class="student-info">
+                            <div class="student-avatar">${st.name.slice(0, 1)}</div>
+                            <span>${st.name}</span>
+                        </div>
+                    </td>
+                    <td>${st.code}</td>
+                    <td>${st.email}</td>
+                    <td>
+                        ${
+                st.computer_id
+                    ? `<span class="computer-badge"><i class="fas fa-laptop"></i>${st.computer_id}</span>`
+                    : `<span class="no-computer">Not Assigned</span>`
+            }
+                    </td>
+                    <td>
+                        <span class="status-badge ${st.status === 'Active' ? 'active' : 'inactive'}">
+                            ${st.status === 'Active' ? 'Active' : 'Inactive'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button value="${st.code}" class="btn-edit" title="Edit Student">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            ${
+                st.status === 'Active'
+                    ? `<button value="${st.code}" class="btn btn-success switch-btn-active" title="Switch student status to INACTIVE">
+                                           <i class="fas fa-power-off"></i>
+                                       </button>`
+                    : `<button value="${st.code}" class="btn btn-warning switch-btn-inactive" title="Switch student status to ACTIVE">
+                                           <i class="fas fa-power-off"></i>
+                                       </button>`
+            }
+                        </div>
+                    </td>
+                    <td>
+                        ${
+                st.status === 'Active'
+                    ? `<i class="fas fa-dot-circle" style="color: #5af55a" title="Active"></i>`
+                    : `<p class="text-center text-info">
+                                       <i class="fas fa-history"></i>
+                                       <i>Since ${st.student_history}</i>
+                                   </p>`
+            }
+                    </td>
+                </tr>
+            `;
+        });
+        table_body_student.innerHTML = rows; // Assign built rows at once
+    }
+};
+
+student_search ? student_search.addEventListener("keydown", (e) => {
+
+    const key = e.key;
+    const search_value_len = student_search.value.length;
+    if (key === 'Backspace' && search_value_len === 1){
+        refreshPage()
+        return
+    }
+    if (key === 'Enter' ||  key === ' ' || search_value_len >= 2) {
+        const e_value = student_search.value;
+
+        const dataToSend = JSON.stringify({
+            arg: e_value,
+        });
+        const formData = new FormData()
+        formData.append('query', dataToSend);
+        fetch('search-student', {
+            method: 'POST',
+            body: formData,
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    Swal.fire({
+                        title: "History",
+                        text: `Error searching student, please try later or contact the administrator\nMessage : ${response.status}`,
+                        icon: ERROR
+                    });
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status === SUCCESS) {
+
+                    const result = JSON.parse(data.result)
+                    console.log(result);
+                    display_search_result(result)
+                    // refreshPage();
+                    // display_history(histories);
+                }
+            })
+            .catch((error) => console.error('Fetching Error :', error))
+    }
+}) : '';
+
+
 
 document.getElementById("btn-show-registered-student").addEventListener("click", function () {
     const studentListSection = document.getElementById("student-list");
