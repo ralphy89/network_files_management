@@ -1,8 +1,3 @@
-// import Swal from 'sweetalert2';
-
-// or via CommonJS
-// const Swal = require('sweetalert2');
-export const SUCCESS = 'success';
 
 document.addEventListener('DOMContentLoaded', () => {
     const fileDropZone = document.getElementById('file_upload_zone');
