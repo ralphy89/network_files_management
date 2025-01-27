@@ -164,6 +164,7 @@ def get_devices():
         return get_ip_list(myIp)
     except Exception as e:
         print(f"Error getting devices : {e}")
+        return list()
 
 
 

@@ -49,8 +49,6 @@ def get_student(request):
         for item in to_pop:
             result.pop(item)
         student = DateTimeEncoder().encode(result)
-
-        print(student)
     return JsonResponse({'status': 'success', 'student': student})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
@@ -59,12 +57,25 @@ def addComputer(request):
 
     if request.method == 'POST':
         POST_data = json.loads(request.POST['computer'])
-        computer = Computer(name=POST_data['name'], mac_adr=POST_data['mac'], status=POST_data['status'])
+        computer = Computer(name=POST_data['name'], mac_adr=POST_data['mac'],
+                            status=POST_data['status'], computer_position=POST_data['position'])
         computer.save()
         computers_list = DateTimeEncoder().encode(list(Computer.objects.all().values()))
         return JsonResponse({'status': 'success', 'computers': computers_list})
 
+
+@csrf_exempt
+def editComputer(request):
+    if request.method == 'POST':
+        POST_data = json.loads(request.POST['computer'])
+        computer = Computer.objects.get(name=POST_data['name'])
+        if computer:
+            computer.computer_position = POST_data['position']
+            computer.save()
+            return JsonResponse({'status': 'success', 'message': 'Computer edited!'})
+        return JsonResponse({'status': 'error', 'message': 'Computer not found!.'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
 
 @csrf_exempt
 def addStudent(request):
@@ -124,21 +135,24 @@ def updateStudentStatus(request):
             student.student_history = history.end_date
             history.save()
         else:
-            student.status = 'Active'
-            infos = {
-                'email': student.email + ' - ' + student.code,
-                'name' : student.name
-            }
-            computer.student_assigned = infos
-            computer.status = 'Occupied'
-            history = History(
-                student= student,
-                computer= computer,
-                title=f'{student.code} used {computer.name}',
-                description=POST_data['comment'],
-            )
-            history.save()
-            student.curr_hist_id = history.history_id
+            if computer.status != 'Occupied' and computer.status != 'Maintenance':
+                student.status = 'Active'
+                infos = {
+                    'email': student.email + ' - ' + student.code,
+                    'name' : student.name
+                }
+                computer.student_assigned = infos
+                computer.status = 'Occupied'
+                history = History(
+                    student= student,
+                    computer= computer,
+                    title=f'{student.code} used {computer.name}',
+                    description=POST_data['comment'],
+                )
+                history.save()
+                student.curr_hist_id = history.history_id
+            else :
+                return JsonResponse({'status': 'Warning', 'message': 'Computer status : ' + computer.status})
 
         computer.save()
         student.save()
@@ -179,10 +193,8 @@ def searchStudent(request):
                     if len(result) == 0:
                         result = Student.objects.filter(computer__name__regex=POST_data)
 
-        print(result)
         if result != None:
             result = DateTimeEncoder().encode(list(result.values()))
-            print(result)
             return JsonResponse({'status': 'success', 'result': result})
         else:
             return JsonResponse({'status': 'success', 'message': 'no result'})

@@ -15,6 +15,7 @@ class Computer(models.Model):
     student_assigned = models.JSONField(null=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
+    computer_position = models.JSONField(null=True)
     class Meta:
         db_table = 'computer'
     def __str__(self):

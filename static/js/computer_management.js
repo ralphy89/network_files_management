@@ -4,6 +4,8 @@ const save_computer_btn = document.getElementById('save-computer-btn');
 const pc_name = document.getElementById('pc-name');
 const pc_mac = document.getElementById('pc-mac');
 const pc_status = document.getElementById('pc-status');
+const pc_position_x = document.getElementById('pc-position-x');
+const pc_position_y = document.getElementById('pc-position-y');
 const table_body_student = document.getElementById('table-body-student');
 const student_search = document.getElementById('studentSearch');
 const save_student_btn = document.getElementById('save-student-btn');
@@ -22,7 +24,14 @@ const switch_btn_inactive = [... document.getElementsByClassName('switch-btn-ina
 const switch_btn_active = [... document.getElementsByClassName('switch-btn-active')];
 const history_btn = [... document.getElementsByClassName('history-btn')];
 const btn_edit = [... document.getElementsByClassName('btn-edit')];
+const icon_edit_position = [... document.getElementsByClassName('icon-edit-position')];
 
+
+const save_new_position_computer_btn = document.getElementById("save-new-position-computer-btn");
+const pc_position_y_edit = document.getElementById('pc-position-y-edit');
+const pc_position_x_edit = document.getElementById('pc-position-x-edit');
+const myEditComputerModal = document.getElementById('position-form-modal');
+const editComputerModal = new bootstrap.Modal(myEditComputerModal)
 mac_regex = /^([0-9A-Fa-f]{2}([-:])?){5}[0-9A-Fa-f]{2}$/;
 email_regex = /^[a-zA-Z0-9._%+-]+@uniq\.edu$/;
 pc_mac.addEventListener('change', (e) => {
@@ -70,12 +79,13 @@ const  display_alert = (data_name, data, type, response=null) => {
 
 }
 
-const addComputer = (pc_name_, pc_mac_, pc_status_) => {
+const addComputer = (pc_name_, pc_mac_, pc_status_, pc_position_) => {
     refresh_after_close_btn("btn-close-computer-form");
     const dataToSend = JSON.stringify({
         name: pc_name_,
         mac: pc_mac_,
         status: pc_status_,
+        position: pc_position_
     });
 
     const formData = new FormData()
@@ -97,21 +107,101 @@ const addComputer = (pc_name_, pc_mac_, pc_status_) => {
                 pc_name.value = '';
                 pc_mac.value='';
                 pc_status.value = 'Available';
+                pc_position_x.value = 'choose';
+                pc_position_y.value = 'choose';
+                pc_position_y.classList.remove('is-invalid');
+                pc_position_x.classList.remove('is-invalid');
+
             }
         })
         .catch((error) => console.error('Fetching Error :', error))
 };
+icon_edit_position.forEach(btn => {
+    btn.addEventListener('click', e => {
+        const pc_name = e.target.ariaValueText;
+        console.log(pc_name)
+        pc_name ? editComputerModal.show() : '';
+        save_new_position_computer_btn.value = pc_name;
+    })
+})
+
+
+const changeComputerPosition = (pc_name_, new_pc_position_) => {
+    refresh_after_close_btn("btn-close-computer-form");
+    const dataToSend = JSON.stringify({
+        name: pc_name_,
+        // mac: pc_mac_,
+        // status: pc_status_,
+        position: new_pc_position_
+    });
+
+    const formData = new FormData()
+    formData.append('computer', dataToSend);
+    fetch('edit-computer', {
+        method: 'POST',
+        body: formData,
+    })
+        .then((response) => {
+            if(!response.ok) {
+                display_alert('Computer', pc_name_, ERROR, response);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if(data.status === SUCCESS) {
+                display_alert('Computer', pc_name_, SUCCESS);
+                // pc_name.value = '';
+                // pc_mac.value='';
+                // pc_status.value = 'Available';
+                pc_position_x_edit.value = 'choose';
+                pc_position_y_edit.value = 'choose';
+                pc_position_y_edit.classList.remove('is-invalid');
+                pc_position_x_edit.classList.remove('is-invalid');
+
+            }
+        })
+        .catch((error) => console.error('Fetching Error :', error))
+};
+
+
 save_computer_btn.addEventListener('click', (e) => {
     const name = pc_name.value;
     const mac = pc_mac.value;
     const status = pc_status.value;
-    let isAllOk = name && status || false;
+    const position_x = pc_position_x.value;
+    position_x !== 'choose' ? '' : pc_position_x.className += ' is-invalid';
+    const position_y = pc_position_y.value;
+    position_y !== 'choose' ? '' : pc_position_y.className += ' is-invalid';
+
+    let isAllOk = name && status && position_y !== 'choose' && position_x !== 'choose' || false;
     isAllOk ? '' : pc_name.className += ' is-invalid';
     const isMacOk = mac_regex.test(mac)
     isMacOk ? '' : pc_mac.className += ' is-invalid';
-
-    isMacOk && isAllOk ? addComputer(name, mac, status) : '';
+    const position = {
+        x: position_x,
+        y: position_y
+    }
+    isMacOk && isAllOk ? addComputer(name, mac, status, position) : '';
 });
+
+save_new_position_computer_btn.addEventListener('click', (e) => {
+
+    const pc_name_ = e.target.value;
+    const position_x = pc_position_x_edit.value;
+    position_x !== 'choose' ? '' : pc_position_x_edit.className += ' is-invalid';
+    const position_y = pc_position_y_edit.value;
+    position_y !== 'choose' ? '' : pc_position_y_edit.className += ' is-invalid';
+
+    let isAllOk =  position_y !== 'choose' && position_x !== 'choose' || false;
+    const position = {
+        x: position_x,
+        y: position_y
+    }
+
+    isAllOk ? changeComputerPosition(pc_name_, position) : '';
+});
+
 
 const cleanModal = () => {
     student_name.value = '';
@@ -297,6 +387,14 @@ table_body_student.addEventListener('click', (e) => {
                             }).then(() => {
                                 refreshPage();
                             });
+                        } else {
+                            Swal.fire({
+                                title: "Warning!",
+                                text: `${data.message}`,
+                                icon: 'warning',
+                                showConfirmButton: true,
+                                confirmButtonText: "Close Message",
+                            })
                         }
                     })
                     .catch((error) => console.error('Fetching Error:', error));
@@ -563,6 +661,8 @@ student_search ? student_search.addEventListener("keydown", (e) => {
     const search_value_len = student_search.value.length;
     if (key === 'Backspace' && search_value_len === 1){
         refreshPage()
+        student_search.focus(true)
+
         return
     }
     if (key === 'Enter' ||  key === ' ' || search_value_len >= 2) {
@@ -613,6 +713,13 @@ document.getElementById("btn-show-registered-student").addEventListener("click",
     const studentListSection = document.getElementById("student-list");
     studentListSection.scrollIntoView({ behavior: "smooth", block: "start" });
 });
+
+document.getElementById('btn-register-student').addEventListener('click', () => {
+    save_student_btn.value = '';
+    modal_title_h3.innerHTML = 'Register Student';
+    student_status.disabled = false
+    save_student_btn.name = ''
+})
 
 document.getElementById('btn-register-student').addEventListener('click', () => {
     save_student_btn.value = '';

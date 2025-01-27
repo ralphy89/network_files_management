@@ -10,7 +10,7 @@ root = "C:\LAB-PROJECTs\\network_files_management\media\\"
 host_ = 'LAB-C113'
 password_ = 'LAB-C113'
 global DEVICES
-DEVICES = []
+DEVICES = list()
 # Create your views here.
 
 def home(request):
@@ -18,31 +18,35 @@ def home(request):
     global DEVICES
     if len(DEVICES) == 0:
         DEVICES = services.get_devices() # [['name', 'ip', 'mac'], ..., ...]
-    connected_devices = len(DEVICES)
-    page_object = {
-        'connected_devices': connected_devices,
-        'devices': DEVICES
-    }
-    assert template == 'home.html', 'template should be \"home.html\"'
-    return render(
-        request,
-        template,
-        page_object,
-    )
+    if (len(DEVICES) > 0):
+        connected_devices = len(DEVICES)
+        page_object = {
+            'connected_devices': connected_devices,
+            'devices': DEVICES
+        }
+        assert template == 'home.html', 'template should be \"home.html\"'
+        return render(
+            request,
+            template,
+            page_object,
+        )
+    return HttpResponse("ERROR GETTING YOUR LOCAL IP ADDRESS, Please make sure you're connected to the network!")
 
 def files_management(request):
+    page_object = {}
     global DEVICES
     template = 'gestionnaire_fichiers/file_management.html'
     if len(DEVICES) == 0:
         DEVICES = services.get_devices()
+    if (len(DEVICES) > 0):
+        assert template == 'gestionnaire_fichiers/file_management.html', 'template should be \"gestionnaire_fichiers/file_management.html\"'
+        return render(
+            request,
+            template,
+            page_object,
+        )
+    return HttpResponse("ERROR GETTING YOUR LOCAL IP ADDRESS, Please make sure you're connected to the network!")
 
-    page_object = {}
-    assert template == 'gestionnaire_fichiers/file_management.html', 'template should be \"gestionnaire_fichiers/file_management.html\"'
-    return render(
-        request,
-        template,
-        page_object,
-    )
 
 @csrf_exempt
 def upload_files(request):
