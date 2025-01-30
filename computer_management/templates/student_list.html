@@ -17,11 +17,11 @@
                 <tr>
                     <th>Student Name</th>
                     <th>Code</th>
-                    <th>Email</th>
                     <th>Computer Assigned</th>
                     <th>Status</th>
                     <th>Actions</th>
                     <th>History</th>
+                    <th>Number of uses</th>
                 </tr>
                 </thead>
                 <tbody id="table-body-student">
@@ -36,7 +36,6 @@
                         <td>
                             {{ student.code }}
                         </td>
-                        <td>{{ student.email }}</td>
                         <td>
                             {% if student.computer_id %}
                                 <span class="computer-badge">
@@ -83,6 +82,8 @@
                                 </p>
                             {% endif %}
                         </td>
+                        <td>{{ student.number_of_uses }}</td>
+
                     </tr>
                 {% endfor %}
                 </tbody>

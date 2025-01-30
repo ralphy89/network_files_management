@@ -85,24 +85,29 @@ def transfer_files(paths, r=False):
 
     hosts = {'ips': []}
     try:
+        temp_ip = ''
         DEVICES = services.get_devices()
         for ip in DEVICES: # [['name', 'ip', 'mac'], ..., ...]
-            print(f"Sharing to {host_}@{ip[1]}")
+            print(f"-----------------------------------------------------------------\n"
+                  f"Sharing to {host_}@{ip[1]}")
+            session = services.Session(host_, ip[1], password_)
+            session.make_ssh_connection()
+            createDirectoryIfNotExist(services.default_dest_folder, session)
+
+            print(session.client)
             for path in paths:
-                print(f"path = {path}")
-                createDirectoryIfNotExist(services.default_dest_folder, host=host_, ip=ip[1], password=password_)
-                temp_ip = services.ssh_copy_file_to_remote_client(host_, ip[1], password_, path, r)
-                if temp_ip == ip[1]:
-                    hosts['ips'].append(temp_ip)
-        print(f'Host succeeded : {hosts}')
+                temp_ip = session.copy_file_to_remote_client(path, r)
+            if temp_ip == ip[1]:
+                hosts['ips'].append(temp_ip)
+            session.close()
         return hosts
     except Exception as e:
         print(f'Error sharing files : {e}')
 
-def createDirectoryIfNotExist(fileName, host, ip, password):
+def createDirectoryIfNotExist(fileName, session):
     try:
         print("Creating file if not exist ....\n")
-        services.createFileDirectory(fileName, True, host=host, ip=ip, password=password)
+        session.createFileDirectory(fileName, True)
     except Exception as e:
         print(f'Error creating file : {e}')
 

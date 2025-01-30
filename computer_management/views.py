@@ -151,6 +151,7 @@ def updateStudentStatus(request):
                 )
                 history.save()
                 student.curr_hist_id = history.history_id
+                student.number_of_uses += 1
             else :
                 return JsonResponse({'status': 'Warning', 'message': 'Computer status : ' + computer.status})
 
@@ -173,6 +174,9 @@ def updateStudent(request):
             student.code = POST_data['code']
         student.email = POST_data['email']
         student.option = POST_data['option']
+        if student.computer.name != computer.name:
+            student.number_of_uses = 0;
+            # CreateHistory()
         student.computer = computer
         student.save()
     return JsonResponse({'status': 'success'})

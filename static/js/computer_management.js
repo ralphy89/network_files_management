@@ -530,7 +530,7 @@ const formatHistoryDate = (start_date, end_date) => {
         return `${formatDate(s_date)}, ${formatTime(s_date)} - ${formatTime(e_date)}`;
     }
 
-    return '-';
+    return `${formatDate(s_date)}, ${formatTime(s_date)} - ${formatDate(e_date)}, ${formatTime(e_date)}`;
 };
 
 const display_history = (histories) => {

@@ -20,20 +20,25 @@
             <!-- Navigation Links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link active" href="{% url 'home' %}"><i class="fas fa-home me-2"></i>Accueil</a>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
+                            <i class="fas fa-home me-2"></i>Accueil
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'files_management' %}"><i class="fas fa-folder me-2"></i>Gestionnaire de fichiers</a>
-                    </li>
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="#"><i class="fas fa-th me-2"></i>Gestionnaire d'Applications</a>#}
-{#                    </li>#}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'computers-management' %}"><i class="fas fa-laptop me-2"></i>Gestion des ordinateurs</a>
+                        <a class="nav-link {% if 'files' in request.path %}active{% endif %}" href="{% url 'files_management' %}">
+                            <i class="fas fa-folder me-2"></i>Gestionnaire de fichiers
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <button class="btn btn-danger"><i class="fas fa-sign-out-alt me-2"></i>Déconnecter</button>
+                        <a class="nav-link {% if 'computers' in request.path %}active{% endif %}" href="{% url 'computers-management' %}">
+                            <i class="fas fa-laptop me-2"></i>Gestion des ordinateurs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-danger">
+                            <i class="fas fa-sign-out-alt me-2"></i>Déconnecter
+                        </button>
                     </li>
                 </ul>
             </div>

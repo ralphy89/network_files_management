@@ -39,6 +39,7 @@ class Student(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
     curr_hist_id = models.BigIntegerField(null=True)
+    number_of_uses = models.PositiveIntegerField(default=0)
     def __str__(self):
         return f"{self.code} : {self.email} : {self.computer}"
 

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import paramiko
 import subprocess
 import time
@@ -5,34 +7,111 @@ from os import system
 from scp import SCPClient
 adapter_name = 'wireless lan adapter wi-fi:'
 default_dest_folder = 'LAB-C113-RESSOURCES'
+check_mark = '===>'
+# check_mark = check_mark.encode()
 
-def set_fingerprint(host, ip):
-    # Construct the SSH command with StrictHostKeyChecking=accept-new to accept the fingerprint and exit
-    command = [
-        "ssh",
-        "-o", "StrictHostKeyChecking=accept-new",  # Automatically accept new host keys and store them
-        "-o", "UserKnownHostsFile=~/.ssh/known_hosts",  # Ensure it stores the fingerprint in the known_hosts file
-        f"{host}@{ip}"  # SSH user@host format
+class Session:
 
-    ]
+    def __init__(self, host, ip, password):
+        self.host = host
+        self.ip = ip
+        self.password = password
+        self.client = None
 
-    try:
-        # Run the command as a subprocess
-        p = subprocess.Popen(
-            command,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
+    def make_ssh_connection(self):
+        print(f"-------------------------------------------------------------------\nEtablishing SSH connection with {self.ip} .....")
+        self.client = "Client created"
+        # self.client = paramiko.SSHClient()
+        # self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-        # Capture the output and errors
-        # output, errors = p.communicate()
-        p.kill()
-        print("OK: Set fingerprint ....")
+        try:
+            self.set_fingerprint()
+            # self.client.connect(self.ip, username=self.host, password=self.password)
+            # stdin, stdout, stderr = client.exec_command('cd')  # Example command
+            # print("OK: Connected to : " + stdout.read().decode())
+        except Exception as e:
+            print(f"Error ({self.host}@{self.ip}): {e}")
+        finally:
+            print(check_mark, end=' ')
+            print(f'Etablish SSH Connection successfully with {self.ip}!!!')
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
+
+    def set_fingerprint(self):
+        # Construct the SSH command with StrictHostKeyChecking=accept-new to accept the fingerprint and exit
+        command = [
+            "ssh",
+            "-o", "StrictHostKeyChecking=accept-new",  # Automatically accept new host keys and store them
+            "-o", "UserKnownHostsFile=~/.ssh/known_hosts",  # Ensure it stores the fingerprint in the known_hosts file
+            f"{self.host}@{self.ip}"  # SSH user@host format
+        ]
+
+        try:
+            # Run the command as a subprocess
+            # p = subprocess.Popen(
+            #     command,
+            #     stdin=subprocess.PIPE,
+            #     stdout=subprocess.PIPE,
+            #     stderr=subprocess.PIPE,
+            #     text=True
+            # )
+
+            # Capture the output and errors
+            # output, errors = p.communicate()
+            # p.kill()
+            print(check_mark, end=' ')
+
+            print("Set fingerprint successfully")
+
+        except Exception as e:
+            print(f"Error setting fingerprint: {e}")
+
+
+    def copy_file_to_remote_client(self, file: str, r=False):
+
+        try:
+            # Now, use SCP to copy the file
+            # with SCPClient(self.client.get_transport()) as scp:
+            #     print(f"Copying {file} to remote server...")
+            #     scp.put(file, f'./{default_dest_folder}/', r)  # Upload file to the remote directory
+            #     print(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/")
+            if file is not None:
+                print(f"Copying {file} to remote server...")
+                print(check_mark, end=' ')
+
+                return self.ip
+        except Exception as e:
+            print(f"Error : {e}")
+
+        finally:
+
+            print(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/\n")
+
+    def createFileDirectory(self, fileName:str, dir:bool):
+
+            try:
+                stdin, stdout, stderr = self.client.exec_command('dir /b')  # Example command
+                result = stdout.read().decode().split()
+                if fileName in result:
+                    print(check_mark, end=' ')
+                    print(f"File/Directory {fileName} already created")
+                else :
+                    if dir:
+                        print(f"\nCreating file/folder {fileName} .....")
+                        self.client.exec_command(f'mkdir {fileName}')
+                        print(check_mark, end=' ')
+                        print(f"File/Directory {fileName} successfully created")
+                    else:
+                        print('Not configured yet')
+
+            except Exception as e:
+                print(f"Error ({self.host}@{self.ip}): {e}")
+
+
+    def close(self):
+        # self.client.close()
+        self.client = f"Client closed for !{self.ip}\n-----------------------------------------------------------------\n\n"
+        print(check_mark, end=' ')
+        print(self.client)
 
 def ssh_connection(host: str, ip: str, password: str):
     print(f"\nEtablishing SSH connection with {ip} .....")
@@ -168,27 +247,6 @@ def get_devices():
 
 
 
-def createFileDirectory(fileName:str, dir:bool, host, ip, password):
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    try:
-        client.connect(ip, username=host, password=password)
-        stdin, stdout, stderr = client.exec_command('dir /b')  # Example command
-        result = stdout.read().decode().split()
-        if fileName in result:
-            print(f"File/Directory {fileName} already created")
-        else :
-            if dir:
-                print(f"\nCreating file/folder {fileName} .....")
-                client.exec_command(f'mkdir {fileName}')
-                print(f"File/Directory {fileName} created")
-            else:
-                print('Not configured yet')
-
-    except Exception as e:
-        print(f"Error ({host}@{ip}): {e}")
-    finally:
-        client.close()
 
 
 # ssh_connection(host_, ip_[0], password_)
