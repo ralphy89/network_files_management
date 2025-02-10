@@ -87,6 +87,12 @@ def upload_directory(request):
 # session.copy_file_to_remote_client('C:\\Users\\LABC113-Ressources\\TEST-28.txt', False)
 # session.close()
 
+def checkMac(mac):
+    mac = mac.split(':')
+    first_3 = mac[0:3]
+    if first_3 == ['f4', 'c8', '8a']:
+        return True
+    return False
 def transfer_files(paths, r=False):
 
     hosts = {'ips': []}
@@ -94,17 +100,18 @@ def transfer_files(paths, r=False):
         temp_ip = ''
         DEVICES = services.get_devices()
         for ip in DEVICES: # [['name', 'ip', 'mac'], ..., ...]
-            print(f"-----------------------------------------------------------------\n"
-                  f"Sharing to {host_}@{ip[1]}")
-            session = services.Session(host_, ip[1], password_)
-            session.make_ssh_connection()
-            createDirectoryIfNotExist(services.default_dest_folder, session)
+            if checkMac(ip[2]):
+                print(f"-----------------------------------------------------------------\n"
+                      f"Sharing to {host_}@{ip[1]}")
+                session = services.Session(host_, ip[1], password_)
+                session.make_ssh_connection()
+                createDirectoryIfNotExist(services.default_dest_folder, session)
 
-            for path in paths:
-                temp_ip = session.copy_file_to_remote_client(path, r)
-            if temp_ip == ip[1]:
-                hosts['ips'].append(temp_ip)
-            session.close()
+                for path in paths:
+                    temp_ip = session.copy_file_to_remote_client(path, r)
+                if temp_ip == ip[1]:
+                    hosts['ips'].append(temp_ip)
+                session.close()
         return hosts
     except Exception as e:
         print(f'Error sharing files : {e}')
