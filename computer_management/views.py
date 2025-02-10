@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .models import Computer, Student, History
+from django.db.models import Q
+from .models import Computer, Student, History, Schedule
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
@@ -10,7 +11,7 @@ django_admin_page_info = ('89zone', 'admin-password')
 class DateTimeEncoder(json.JSONEncoder):
     #Override the default method
     def default(self, obj):
-        if isinstance(obj, (datetime.date, datetime.datetime)):
+        if isinstance(obj, (datetime.date, datetime.datetime, datetime.time)):
             return obj.isoformat()
 # Create your views here.
 
@@ -18,7 +19,7 @@ def computerManagements(request):
     template = 'computerManagement.html'
 
     computers = Computer.objects.all().values()
-    students = Student.objects.all().values()
+    students = Student.objects.filter(type='Student').values()
     page_object = {
         'computers': computers,
         'students': students,
@@ -30,6 +31,135 @@ def computerManagements(request):
         page_object,
     )
 
+def scheduleManagements(request):
+    template = 'scheduleManagement.html'
+
+    schedules = Schedule.objects.all().values()
+    computers = Computer.objects.all().values()
+    students = Student.objects.all().values()
+
+    page_object = {
+        'schedules': schedules,
+        'computers': computers,
+        'students': students,
+    }
+    assert template == 'scheduleManagement.html', 'template should be \"scheduleManagement.html\"'
+    return render(
+        request,
+        template,
+        page_object,
+    )
+def guests_management(request):
+    template = 'guestsManagement.html'
+
+    computers = Computer.objects.all().values()
+    students = Student.objects.filter(type='Guest').values()
+    page_object = {
+        'computers': computers,
+        'students': students,
+    }
+    assert template == 'guestsManagement.html', 'template should be \"guestsManagement.html\"'
+    return render(
+        request,
+        template,
+        page_object,
+    )
+
+def hasConflict(day, s_hour_, e_hour_, student_, computer_, id_to_exclude):
+    registered_for_given_day = None
+    if id_to_exclude == None:
+        registered_for_given_day = Schedule.objects.filter(day=day).values()
+    else:
+        registered_for_given_day = Schedule.objects.filter(day=day).exclude(schedule_id=id_to_exclude).values()
+
+    if len(registered_for_given_day) > 0 :
+        registered_for_given_computer = registered_for_given_day.filter(computer_id=computer_)
+        if len(registered_for_given_computer) > 0:
+            conflict_list = registered_for_given_computer.filter(
+                (Q(end_hour__gte=e_hour_) & Q(start_hour__lte=e_hour_)) |
+                (Q(end_hour__gte=s_hour_) & Q(start_hour__lte=s_hour_))
+            )
+            if len(conflict_list) == 0:
+                return False
+            else:
+                return True
+
+    return False
+
+
+@csrf_exempt
+def addSchedule(request):
+    if request.method == 'POST':
+        POST_data = json.loads(request.POST['schedule'])
+        student = Student.objects.get(code=POST_data['student'])
+        computer = Computer.objects.get(name=POST_data['computer'])
+
+        s_hour = datetime.time(POST_data['s_hour'])
+        e_hour = datetime.time(POST_data['e_hour'])
+        day = POST_data['day']
+        hasConflict_ = hasConflict(day, s_hour, e_hour, student.code, computer.name, None)
+        if(not hasConflict_):
+            schedule = Schedule(day=day, start_hour=s_hour, end_hour=e_hour,
+                                student=student, computer=computer)
+            schedule.save()
+
+            return JsonResponse({'status': 'success', 'message':'Schedule added Successfully!'})
+        else:
+            return JsonResponse({'status': 'warning', 'message':'Schedule Conflict detected!!!'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+@csrf_exempt
+def updateSchedule(request):
+    if request.method == 'POST':
+        POST_data = json.loads(request.POST['schedule'])
+        schedule = Schedule.objects.get(schedule_id=POST_data['prev_code'])
+        student = Student.objects.get(code=POST_data['student'])
+        computer = Computer.objects.get(name=POST_data['computer'])
+
+        s_hour = datetime.time(POST_data['s_hour'])
+        e_hour = datetime.time(POST_data['e_hour'])
+        day = POST_data['day']
+        hasConflict_ = hasConflict(day, s_hour, e_hour, student.code, computer.name, POST_data['prev_code'])
+        if(not hasConflict_):
+            schedule.day=day
+            schedule.start_hour=s_hour
+            schedule.end_hour=e_hour
+            schedule.student=student
+            schedule.computer=computer
+            schedule.save()
+            return JsonResponse({'status': 'success', 'message':'Schedule updated Successfully!'})
+        else:
+            return JsonResponse({'status': 'warning', 'message':'Schedule Conflict detected!!!'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+@csrf_exempt
+def get_schedule(request):
+    if request.method == 'POST':
+        POST_data = json.loads(request.POST['schedule'])['schedule_id']
+        result = Schedule.objects.get(schedule_id=POST_data).__dict__
+        to_pop = ['created', 'updated']
+        for item in to_pop:
+            result.pop(item)
+        schedule = DateTimeEncoder().encode(result)
+    return JsonResponse({'status': 'success', 'schedule': schedule})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+@csrf_exempt
+def checkSchedule(request):
+    if request.method == 'POST':
+        POST_data = json.loads(request.POST['schedule'])
+        computer = Computer.objects.get(name=POST_data['computer'])
+
+        s_hour = datetime.time(POST_data['s_hour'])
+        e_hour = datetime.time(POST_data['e_hour'])
+        day = POST_data['day']
+        hasConflict_ = hasConflict(day, s_hour, e_hour, '', computer.name, None)
+        if(not hasConflict_):
+            return JsonResponse({'status': 'success', 'message':f'{computer} is Available for this schedule!'})
+        else:
+            return JsonResponse({'status': 'warning', 'message':'Schedule Conflict detected!!!'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
 @csrf_exempt
 def get_histories(request):
     if request.method == 'POST':
@@ -38,6 +168,8 @@ def get_histories(request):
         histories_list = DateTimeEncoder().encode(histories)
         return JsonResponse({'status': 'success', 'histories': histories_list})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+
 
 @csrf_exempt
 def get_student(request):
@@ -81,9 +213,11 @@ def editComputer(request):
 def addStudent(request):
     if request.method == 'POST':
         POST_data = json.loads(request.POST['student'])
+        print(POST_data)
         computer = Computer.objects.get(name=POST_data['computer'])
         name = str(POST_data['name']).lower().split()
         new_name = ''
+
         for n in name:
             new_name += f"{n.capitalize()} "
         name = new_name.strip()
@@ -93,10 +227,16 @@ def addStudent(request):
             email=str(POST_data['email']).lower(),
             status='Inactive',
             computer=computer,
-            option=POST_data['option']
+            option=POST_data['option'],
+            type=POST_data['type'],
+            phone= POST_data['phone']
         )
-        student.save()
 
+        if student.code == 'GUEST':
+            student.code += f'-{student.email}'
+
+        student.save()
+        print(student)
         # if POST_data['status'] == 'Active':
         #     infos = {
         #         'email': POST_data['email'] + ' - ' + POST_data['code'],

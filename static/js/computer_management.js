@@ -11,6 +11,7 @@ const student_search = document.getElementById('studentSearch');
 const save_student_btn = document.getElementById('save-student-btn');
 const student_name = document.getElementById('student-name');
 const student_code = document.getElementById('student-code');
+const student_phone = document.getElementById('student-phone');
 const student_email = document.getElementById('student-email');
 const student_status = document.getElementById('student-status');
 const student_computer = document.getElementById('assigned-computer');
@@ -203,7 +204,7 @@ save_new_position_computer_btn.addEventListener('click', (e) => {
 });
 
 
-const cleanModal = () => {
+const cleanModal = (value) => {
     student_name.value = '';
     student_name.classList.remove('is-invalid');
     student_name.classList.remove('is-valid');
@@ -211,6 +212,10 @@ const cleanModal = () => {
     student_code.value = '';
     student_code.classList.remove('is-invalid');
     student_code.classList.remove('is-valid');
+
+    student_phone.value = '';
+    student_phone.classList.remove('is-invalid');
+    student_phone.classList.remove('is-valid');
 
     student_status.value = 'Active';
     student_email.value = '';
@@ -222,7 +227,11 @@ const cleanModal = () => {
     student_computer.classList.remove('is-invalid');
     student_computer.classList.remove('is-valid');
 
-    student_option.value = ''
+    if (value === 'Guest') {
+        student_option.value = 'Guest'
+    } else {
+        student_option.value = ''
+    }
     student_option.classList.remove('is-invalid');
 
     save_student_btn.value = '';
@@ -233,7 +242,7 @@ const cleanModal = () => {
     studentModal.hide();
 
 }
-const addStudent = (name_, code_, email_, status_, computer_, option_, update=false) => {
+const addStudent = (name_, code_, email_, status_, computer_, option_, phone_, type_, update=false) => {
     refresh_after_close_btn("btn-close-student-form");
     const dataToSend = JSON.stringify({
         name: name_,
@@ -242,7 +251,9 @@ const addStudent = (name_, code_, email_, status_, computer_, option_, update=fa
         status: status_,
         computer: computer_,
         option: option_,
-        prev_code: save_student_btn.name
+        prev_code: save_student_btn.name,
+        type: type_,
+        phone: phone_,
     });
     const endPoints = ['add-student', 'update-student'];
     let endPoint = endPoints[0];
@@ -265,22 +276,33 @@ const addStudent = (name_, code_, email_, status_, computer_, option_, update=fa
         .then((data) => {
             if(data.status === SUCCESS) {
                 display_alert('Student', `${code_}-${name_}`, SUCCESS)
-                cleanModal();
+                if (type_ === 'Guest'){
+                    cleanModal(type_);
+                } else
+                {
+                    cleanModal();
+                }
             }
         })
         .catch((error) => console.error('Fetching Error :', error))
 }
 save_student_btn.addEventListener('click', (e) => {
+    let type = 'Guest';
+    const isGuest = e.target.classList.contains('guest-btn');
     const name = student_name.value;
     name ? '' : student_name.className += ' is-invalid';
     const code = student_code.value;
     code ? '' : student_code.className += ' is-invalid';
+    const phone = student_phone.value;
+    phone ? '' : student_phone.className += ' is-invalid';
     const status = student_status.value;
     const email = student_email.value;
     const computer = student_computer.value;
     const option = student_option.value;
-    option ? '' : student_option.className += ' is-invalid';
-
+    if (!isGuest){
+        option ? '' : student_option.className += ' is-invalid';
+        type = 'Student';
+    }
     computer !== 'Choose' ? '' : student_computer.className += ' is-invalid';
     const isEmailOk = email_regex.test(email)
     isEmailOk ? '' : student_email.className += ' is-invalid'
@@ -288,11 +310,10 @@ save_student_btn.addEventListener('click', (e) => {
     let isAllOk = name && code && isEmailOk && option && computer !== 'Choose' || false;
     if(save_student_btn.value === 'update-btn') {
         if(isAllOk) {
-            addStudent(name, code, email, status, computer, option, true)
-
+            addStudent(name, code, email, status, computer, option, phone, type, true)
         }
     } else {
-        isAllOk ? addStudent(name, code, email, status, computer, option, false) : '';
+        isAllOk ? addStudent(name, code, email, status, computer, option, phone, type, false) : '';
     }
 });
 
@@ -489,6 +510,7 @@ table_body_student.addEventListener('click', (e) => {
                         student_email.value = student.email;
                         student_computer.value = student.computer_id;
                         student_option.value = student.option;
+                        student_phone.value = student.phone;
                         save_student_btn.value = 'update-btn';
                         save_student_btn.name = code;
                         console.log(code)
@@ -609,13 +631,15 @@ const display_search_result = (result) => {
                         </div>
                     </td>
                     <td>${st.code}</td>
-                    <td>${st.email}</td>
                     <td>
                         ${
                 st.computer_id
                     ? `<span class="computer-badge"><i class="fas fa-laptop"></i>${st.computer_id}</span>`
                     : `<span class="no-computer">Not Assigned</span>`
             }
+                    </td>
+                    <td>
+                           ...
                     </td>
                     <td>
                         <span class="status-badge ${st.status === 'Active' ? 'active' : 'inactive'}">
@@ -648,6 +672,8 @@ const display_search_result = (result) => {
                                    </p>`
             }
                     </td>
+                    <td>${st.number_of_uses}</td>
+
                 </tr>
             `;
         });
@@ -721,9 +747,9 @@ document.getElementById('btn-register-student').addEventListener('click', () => 
     save_student_btn.name = ''
 })
 
-document.getElementById('btn-register-student').addEventListener('click', () => {
-    save_student_btn.value = '';
-    modal_title_h3.innerHTML = 'Register Student';
-    student_status.disabled = false
-    save_student_btn.name = ''
-})
+// document.getElementById('btn-register-student').addEventListener('click', () => {
+//     save_student_btn.value = '';
+//     modal_title_h3.innerHTML = 'Register Student';
+//     student_status.disabled = false
+//     save_student_btn.name = ''
+// })

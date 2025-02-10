@@ -1,0 +1,67 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/schedule_list.css' %}">
+<section id="schedule-list">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Registered Schedules</h2>
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="scheduleSearch" class="search-input" placeholder="Search by day, code, computer...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="schedule-table">
+                <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Start Hour</th>
+                    <th>End Hour</th>
+                    <th>Computer Assigned</th>
+                    <th>Student</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="table-body-schedule">
+                {% for schedule in schedules %}
+                    <tr>
+                        <td>
+                            <div class="student-info">
+                                <div class="student-avatar">{{ schedule.day|slice:":2" }}</div>
+                                <span>{{ schedule.day }}</span>
+                            </div>
+                        </td>
+                        <td>{{ schedule.start_hour }}</td>
+                        <td>{{ schedule.end_hour }}</td>
+                        <td>
+                            {% if schedule.computer_id %}
+                                <span class="computer-badge">
+                                    <i class="fas fa-laptop"></i>
+                                    {{ schedule.computer_id }}
+                                </span>
+                            {% else %}
+                                <span class="no-computer">Not Assigned</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ schedule.student_id }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button value="{{ schedule.schedule_id }}" class="btn-edit" title="Edit Schedule">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if not schedules %}
+            <div class="no-results">
+                <i class="fas fa-calendar"></i>
+                <p>No Schedules found</p>
+            </div>
+        {% endif %}
+    </div>
+</section>

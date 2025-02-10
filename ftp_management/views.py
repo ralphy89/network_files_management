@@ -48,6 +48,8 @@ def files_management(request):
     return HttpResponse("ERROR GETTING YOUR LOCAL IP ADDRESS, Please make sure you're connected to the network!")
 
 
+
+
 @csrf_exempt
 def upload_files(request):
     if request.method == 'POST':
@@ -110,5 +112,7 @@ def createDirectoryIfNotExist(fileName, session):
         session.createFileDirectory(fileName, True)
     except Exception as e:
         print(f'Error creating file : {e}')
+
+
 
 

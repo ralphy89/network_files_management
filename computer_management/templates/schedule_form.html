@@ -1,0 +1,147 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/computer_card_dark.css' %}">
+<link rel="stylesheet" href="{% static 'css/student_list.css' %}">
+
+
+<!-- Modal form -->
+<div data-bs-backdrop="static"  class="modal fade " id="schedule-form-modal" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card mb-0">
+                    <div class="card-header text-left">
+                        <h3 id="modal-title-h3-sc" class="fw-bolder text-success">Add Schedule</h3>
+                        <button id="btn-close-schedule-form" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Close form"></button>
+                    </div>
+                    <div class="card-body">
+                        <form role="form text-left">
+                            <label>
+                                <i class="fa fa-calendar"></i> Day
+                            </label>
+                            <div class="input-group mb-3">
+                                <select class="form-control input-square" id="sc-day">
+                                    <option selected>---</option>
+                                    <option>Monday</option>
+                                    <option>Tuesday</option>
+                                    <option>Wednesday</option>
+                                    <option>Thursday</option>
+                                    <option>Friday</option>
+                                    <option>Saturday</option>
+                                    <option>Sunday</option>
+                                </select>
+                                <small id="sc-day-help" class="form-text text-muted invalid-feedback">
+                                    Please choose a valid Day.
+                                </small>
+                            </div>
+
+                            <!-- Start Hour Selection -->
+                            <label for="start-hour">
+                                <i class="fa fa-clock"></i> Start Hour
+                            </label>
+                            <div class="input-group mb-3">
+                                <select class="form-control input-square" id="start-hour">
+                                    <option value="---" selected>---</option>
+                                    <option value="06">06:00 AM</option>
+                                    <option value="07">07:00 AM</option>
+                                    <option value="08">08:00 AM</option>
+                                    <option value="09">09:00 AM</option>
+                                    <option value="10">10:00 AM</option>
+                                    <option value="11">11:00 AM</option>
+                                    <option value="12">12:00 PM</option>
+                                    <option value="13">01:00 PM</option>
+                                    <option value="14">02:00 PM</option>
+                                    <option value="15">03:00 PM</option>
+                                    <option value="16">04:00 PM</option>
+                                    <option value="17">05:00 PM</option>
+                                    <option value="18">06:00 PM</option>
+                                    <option value="19">07:00 PM</option>
+                                    <option value="20">08:00 PM</option>
+                                    <option value="21">09:00 PM</option>
+                                    <option value="22">10:00 PM</option>
+                                    <option value="23">11:00 PM</option>
+                                </select>
+                                <small id="start-hour-Help" class="form-text text-muted invalid-feedback">Please choose a valid start hour.</small>
+                            </div>
+
+                            <!-- End Hour Selection -->
+                            <label for="end-hour">
+                                <i class="fa fa-clock"></i> End Hour
+                            </label>
+                            <div class="input-group mb-3">
+                                <select class="form-control input-square" id="end-hour">
+                                    <option value="---" selected>---</option>
+                                    <option value="06">06:00 AM</option>
+                                    <option value="07">07:00 AM</option>
+                                    <option value="08">08:00 AM</option>
+                                    <option value="09">09:00 AM</option>
+                                    <option value="10">10:00 AM</option>
+                                    <option value="11">11:00 AM</option>
+                                    <option value="12">12:00 PM</option>
+                                    <option value="13">01:00 PM</option>
+                                    <option value="14">02:00 PM</option>
+                                    <option value="15">03:00 PM</option>
+                                    <option value="16">04:00 PM</option>
+                                    <option value="17">05:00 PM</option>
+                                    <option value="18">06:00 PM</option>
+                                    <option value="19">07:00 PM</option>
+                                    <option value="20">08:00 PM</option>
+                                    <option value="21">09:00 PM</option>
+                                    <option value="22">10:00 PM</option>
+                                    <option value="23">11:00 PM</option>
+                                </select>
+                                <small id="end-hour-Help" class="form-text text-muted invalid-feedback">
+                                    Please choose a valid end hour.
+                                    <strong><br>End Hour should > To Start Hour </strong>
+                                    <strong><br>Max : 4h </strong>
+
+                                </small>
+                            </div>
+
+                            <label for="sc-assigned-computer">
+                                <i class="fa fa-laptop"></i> Computer
+                            </label>
+                            <div class="input-group mb-3 has-validation">
+                                <select class="form-control input-square " id="sc-assigned-computer">
+                                    <option selected>---</option>
+                                    {% for computer in computers %}
+                                        <option value="{{ computer.name }}">{{ computer.name }} - {{ computer.mac_adr }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small id="sc-computerHelp" class="form-text text-muted invalid-feedback">
+                                    <p>
+                                        Please choose a computer.
+                                    </p>
+                                </small>
+                            </div>
+
+                            <label for="sc-assigned-student">
+                                <i class="fa fa-user-md"></i> Student
+                            </label>
+                            <div class="input-group mb-3 has-validation">
+                                <select class="form-control input-square " id="sc-assigned-student">
+                                    <option selected>---</option>
+                                    {% for student in students %}
+                                        <option value="{{ student.code }}">{{ student.name }} - {{ student.code }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small id="sc-studentHelp" class="form-text text-muted invalid-feedback">
+                                    <p>
+                                        Please choose the student!!.
+                                    </p>
+                                </small>
+                            </div>
+                            <div class="text-center">
+                                <button id="save-sc-btn" type="button" class="btn btn-round btn-success btn-lg w-100 mt-4 mb-0">
+                                    Save Schedule
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -12,4 +12,13 @@ urlpatterns = [
     path('update-student', views.updateStudent, name='update-student'),
     path('get-histories', views.get_histories, name='histories-by-name'),
     path('search-student', views.searchStudent, name='search-student'),
+    path('guests', views.guests_management, name='guests-management'),
+    path('schedules', views.scheduleManagements, name='schedules-management'),
+    path('add-schedule', views.addSchedule, name='add-schedule'),
+    path('update-schedule', views.updateSchedule, name='update-schedule'),
+
+    path('get-schedule', views.get_schedule, name='get-schedule'),
+    path('check-schedule', views.checkSchedule, name='check-schedule'),
+
+
 ]

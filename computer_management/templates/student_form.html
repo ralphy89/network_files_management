@@ -1,116 +1,141 @@
 {% load static %}
 
 <!-- Modal form -->
-<div data-bs-backdrop="static"  class="modal fade " id="student-form-modal" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-body p-0">
-                <div class="card mb-0">
-                    <div class="card-header text-left">
-                        <h3 id="modal-title-h3" class="fw-bolder text-success">Register Student</h3>
-                        <button id="btn-close-student-form" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Close form"></button>
-                    </div>
-                    <div class="card-body">
-                        <form role="form text-left">
-                            <label>Student's Name</label>
-                            <div class="input-group mb-3 has-validation">
-                                <input
-                                        id="student-name"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="NOM et prenom"
-                                        aria-label="Student's name"
-                                        aria-describedby="student-addon"
-                                        required="required"
-{#                                        value="Dumera Ralph"#}
-                                />
-                                <small id="studentNameHelp" class="form-text text-muted invalid-feedback">Please provide a valid name.</small>
 
-                            </div>
-                            <label>Code</label>
-                            <div class="input-group mb-3 has-validation">
-                                <input
-                                        id="student-code"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="JH240101"
-                                        aria-label="Student code"
-                                        aria-describedby="student code-addon"
-                                        required="required"
-                                />
-                                <small id="studentCodeHelp" class="form-text text-muted invalid-feedback">
-                                    <p>
-                                        Invalid Code.
-                                    </p>
-                                </small>
-                            </div>
-                            <label>Email</label>
-                            <div class="input-group mb-3 has-validation">
-                                <input
-                                        id="student-email"
-                                        type="email"
-                                        class="form-control"
-                                        placeholder="doe.jhon@uniq.edu"
-                                        aria-label="Student email"
-                                        aria-describedby="student email addon"
-                                        required="required"
-                                />
-                                <small id="emailHelp" class="form-text text-muted invalid-feedback">
-                                    <p>
-                                        Invalid Email.
-                                    </p>
-                                </small>
-                            </div>
-                            <label for="student-status">Status</label>
-                            <div class="input-group mb-3">
-                                <select class="form-control input-square" id="student-status">
-                                    <option selected>Active</option>
-                                    <option>Inactive</option>
-                                    <option>Deleted</option>
-                                </select>
-                            </div>
-                            <label for="student-option">Option</label>
-                            <div class="input-group mb-3">
-                                <input
-                                        id="student-option"
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Genie Informatique"
-                                        aria-label="Student Option"
-                                        aria-describedby="student option addon"
-                                        required="required"
-                                />
-                                <small id="optionHelp" class="form-text text-muted invalid-feedback">
-                                    <p>
-                                        Please fill out this field.
-                                    </p>
-                                </small>
-                            </div>
-                            <label for="assigned-computer">Assigned Computer</label>
-                            <div class="input-group mb-3 has-validation">
-                                <select class="form-control input-square " id="assigned-computer">
-                                    <option selected>Choose</option>
-                                    {% for computer in computers %}
-                                        <option>{{ computer.name }}</option>
-                                    {% endfor %}
-                                </select>
-                                <small id="computerHelp" class="form-text text-muted invalid-feedback">
-                                    <p>
-                                        Please choose a computer.
-                                    </p>
-                                </small>
-                            </div>
-                            <div class="text-center">
-                                <button id="save-student-btn" type="button" class="btn btn-round btn-success btn-lg w-100 mt-4 mb-0">
-                                    Save
-                                </button>
-                            </div>
-                        </form>
+<div data-bs-backdrop="static"  class="modal fade " id="student-form-modal" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="card mb-0">
+                        <div class="card-header text-left">
+                            <h3 id="modal-title-h3" class="fw-bolder text-success">Register Student</h3>
+                            <button id="btn-close-student-form" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Close form"></button>
+                        </div>
+                        <div class="card-body">
+                            <form role="form text-left">
+                                <label>Student's Name</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <input
+                                            id="student-name"
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="NOM et prenom"
+                                            aria-label="Student's name"
+                                            aria-describedby="student-addon"
+                                            required="required"
+                                            {#                                        value="Dumera Ralph"#}
+                                    />
+                                    <small id="studentNameHelp" class="form-text text-muted invalid-feedback">Please provide a valid name.</small>
+
+                                </div>
+                                <label>Code</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <input
+                                            value="{% if 'guests' in request.path %}Guest{% endif %}"
+
+                                            id="student-code"
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="JH240101"
+                                            aria-label="Student code"
+                                            aria-describedby="student code-addon"
+                                            required="required"
+                                            {% if 'guests' in request.path %} disabled {% else %}{% endif %}
+
+                                    />
+                                    <small id="studentCodeHelp" class="form-text text-muted invalid-feedback">
+                                        <p>
+                                            Invalid Code.
+                                        </p>
+                                    </small>
+                                </div>
+                                <label>Phone</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <input
+                                            id="student-phone"
+                                            type="tel"
+                                            class="form-control"
+                                            placeholder="+509 0000-00-00"
+                                            aria-label="Student Phone"
+                                            aria-describedby="student phone-addon"
+                                            required="{% if 'computers' in request.path %}''{% else %}required{% endif %}"
+                                    />
+                                    <small id="studentPoneHelp" class="form-text text-muted invalid-feedback">
+                                        <p>
+                                            Invalid Phone Number.
+                                        </p>
+                                    </small>
+                                </div>
+                                <label>Email</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <input
+
+                                            id="student-email"
+                                            type="email"
+                                            class="form-control"
+                                            placeholder="doe.jhon@uniq.edu"
+                                            aria-label="Student email"
+                                            aria-describedby="student email addon"
+                                            required="required"
+                                    />
+                                    <small id="emailHelp" class="form-text text-muted invalid-feedback">
+                                        <p>
+                                            Invalid Email.
+                                        </p>
+                                    </small>
+                                </div>
+                                <label for="student-status">Status</label>
+                                <div class="input-group mb-3">
+                                    <select class="form-control input-square" id="student-status">
+                                        <option selected>Active</option>
+                                        <option>Inactive</option>
+                                        <option>Deleted</option>
+                                    </select>
+                                </div>
+                                <label for="student-option">Option</label>
+                                <div class="input-group mb-3">
+                                    <input
+                                            value="{% if 'guests' in request.path %}Guest{% endif %}"
+                                            id="student-option"
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Genie Informatique"
+                                            aria-label="Student Option"
+                                            aria-describedby="student option addon"
+                                            required="required"
+                                            {% if 'guests' in request.path %} disabled {% else %}{% endif %}
+                                    />
+                                    <small id="optionHelp" class="form-text text-muted invalid-feedback">
+                                        <p>
+                                            Please fill out this field.
+                                        </p>
+                                    </small>
+                                </div>
+                                <label for="assigned-computer">Assigned Computer</label>
+                                <div class="input-group mb-3 has-validation">
+                                    <select class="form-control input-square " id="assigned-computer">
+                                        <option selected>Choose</option>
+                                        {% for computer in computers %}
+                                            <option>{{ computer.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small id="computerHelp" class="form-text text-muted invalid-feedback">
+                                        <p>
+                                            Please choose a computer.
+                                        </p>
+                                    </small>
+                                </div>
+                                <div class="text-center">
+                                    <button id="save-student-btn" type="button"
+                                            class="btn btn-round btn-success btn-lg w-100 mt-4 mb-0 {% if 'guests' in request.path %}guest-btn{% endif %}">
+                                        Save
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 

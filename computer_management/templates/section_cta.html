@@ -12,7 +12,8 @@
     <button id="btn-show-registered-student" class="btn btn-success mx-2 my-2">
         <i class="fas fa-users"></i> Show Registered Students
     </button>
-    <button id="btn-add-computer" class="btn btn-secondary mx-2 my-2" data-bs-toggle="modal" data-bs-target="#computer-form-modal">
+    <button id="btn-add-computer" class="btn btn-secondary mx-2 my-2"
+            style="display: {% if 'guests' in request.path %}none{% endif %}" data-bs-toggle="modal" data-bs-target="#computer-form-modal">
         <i class="fas fa-laptop-code"></i> Add Computer
     </button>
 </section>

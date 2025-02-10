@@ -1,6 +1,5 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/student_list.css' %}">
-
 <section id="student-list">
     <div class="container">
         <div class="section-header">
@@ -18,6 +17,7 @@
                     <th>Student Name</th>
                     <th>Code</th>
                     <th>Computer Assigned</th>
+                    <th>Agenda</th>
                     <th>Status</th>
                     <th>Actions</th>
                     <th>History</th>
@@ -47,6 +47,9 @@
                             {% endif %}
                         </td>
                         <td>
+                            ...
+                        </td>
+                        <td>
                             <span class="status-badge {% if student.status == 'Active' %}active{% else %}inactive{% endif %}">
                                 {{ student.status|default:"Inactive" }}
                             </span>
@@ -56,9 +59,9 @@
                                 <button value="{{ student.code }}" class="btn-edit" title="Edit Student">
                                     <i class="fas fa-edit"></i>
                                 </button>
-{#                                <button disabled class="btn-delete" title="Remove Student">#}
-{#                                    <i class="fas fa-trash-alt"></i>#}
-{#                                </button>#}
+                                {#                                <button disabled class="btn-delete" title="Remove Student">#}
+                                {#                                    <i class="fas fa-trash-alt"></i>#}
+                                {#                                </button>#}
                                 {% if student.status == 'Active' %}
                                     <button value="{{ student.code }}" id="switch-btn-active"
                                             class="btn btn-success switch-btn-active" title="Switch student status to INACTIVE">
@@ -74,11 +77,11 @@
                         </td>
                         <td>
                             {% if student.status == 'Active' %}
-                             <i class="fas fa-dot-circle" style="color: #5af55a" title="active"></i>
+                                <i class="fas fa-dot-circle" style="color: #5af55a" title="active"></i>
                             {% else %}
                                 <p class="text-center text-info">
-                                <i class="fas fa-history"></i>
-                                <i>Since {{ student.student_history }}</i>
+                                    <i class="fas fa-history"></i>
+                                    <i>Since {{ student.student_history }}</i>
                                 </p>
                             {% endif %}
                         </td>

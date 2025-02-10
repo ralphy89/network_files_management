@@ -1,5 +1,5 @@
 /* CTA Section Container */
-#cta-btn {
+#cta-btn, #cta-btn-schedule {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 2rem 1rem;
     border-radius: 1rem;
@@ -8,7 +8,7 @@
 }
 
 /* Common Button Styles */
-#cta-btn button {
+#cta-btn button, #cta-btn-schedule button {
     position: relative;
     padding: 0.8rem 1.5rem;
     border: none;
@@ -22,32 +22,32 @@
 }
 
 /* Button Hover Effects */
-#cta-btn button:hover {
+#cta-btn button:hover, #cta-btn-schedule button:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-#cta-btn button:active {
+#cta-btn button:active, #cta-btn-schedule button:active {
     transform: translateY(1px);
 }
 
 /* Register Student Button */
-#btn-register-student {
+#btn-register-student, #btn-register-schedule {
     background: #1c3e4b !important;
     color: white !important;
 }
 
-#btn-register-student:hover {
+#btn-register-student:hover, #btn-register-schedule:hover {
     background: #23576b !important;
 }
 
 /* Show Registered Students Button */
-#btn-show-registered-student {
+#btn-show-registered-student, #btn-show-registered-schedule  {
     background: #28a745 !important;
     color: white !important;
 }
 
-#btn-show-registered-student:hover {
+#btn-show-registered-student:hover, #btn-show-registered-schedule:hover {
     background: #2dbc4e !important;
 }
 

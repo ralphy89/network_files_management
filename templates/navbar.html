@@ -22,22 +22,32 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
-                            <i class="fas fa-home me-2"></i>Accueil
+                            <i class="fas fa-home me-2"></i>Home
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if 'files' in request.path %}active{% endif %}" href="{% url 'files_management' %}">
-                            <i class="fas fa-folder me-2"></i>Gestionnaire de fichiers
+                            <i class="fas fa-folder me-2"></i>Files Management
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if 'computers' in request.path %}active{% endif %}" href="{% url 'computers-management' %}">
-                            <i class="fas fa-laptop me-2"></i>Gestion des ordinateurs
+                            <i class="fas fa-laptop me-2"></i>Computers Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'guests' in request.path %}active{% endif %}" href="{% url 'guests-management' %}">
+                            <i class="fas fa-user me-2"></i>Guests Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'schedules' in request.path %}active{% endif %}" href="{% url 'schedules-management' %}">
+                            <i class="fas fa-calendar me-2"></i>Schedules
                         </a>
                     </li>
                     <li class="nav-item">
                         <button class="btn btn-danger">
-                            <i class="fas fa-sign-out-alt me-2"></i>Déconnecter
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
                         </button>
                     </li>
                 </ul>
