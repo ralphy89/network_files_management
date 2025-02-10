@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 import paramiko
 import subprocess
@@ -19,20 +18,22 @@ class Session:
         self.client = None
 
     def make_ssh_connection(self):
+        self.set_fingerprint()
+
         print(f"-------------------------------------------------------------------\nEtablishing SSH connection with {self.ip} .....")
         self.client = paramiko.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         try:
-            self.set_fingerprint()
             self.client.connect(self.ip, username=self.host, password=self.password)
-            stdin, stdout, stderr = client.exec_command('cd')  # Example command
-            print("OK: Connected to : " + stdout.read().decode())
-        except Exception as e:
-            print(f"Error ({self.host}@{self.ip}): {e}")
-        finally:
+            stdin, stdout, stderr = self.client.exec_command('cd')  # Example command
+            print("\nOK: Connected to : " + stdout.read().decode())
             print(check_mark, end=' ')
             print(f'Etablish SSH Connection successfully with {self.ip}!!!')
+        except Exception as e:
+            print(f"Error ({self.host}@{self.ip}): {e}")
+
+
 
 
     def set_fingerprint(self):
@@ -58,11 +59,11 @@ class Session:
             # output, errors = p.communicate()
             # p.kill()
             print(check_mark, end=' ')
-
-            print("Set fingerprint successfully")
+            p.kill()
+            print("Set fingerprint successfully\n")
 
         except Exception as e:
-            print(f"Error setting fingerprint: {e}")
+            print(f"Error setting fingerprint: {e}\n")
 
 
     def copy_file_to_remote_client(self, file: str, r=False):
@@ -76,39 +77,36 @@ class Session:
             if file is not None:
                 print(f"Copying {file} to remote server...")
                 print(check_mark, end=' ')
-
+                print(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/\n")
                 return self.ip
         except Exception as e:
             print(f"Error : {e}")
 
-        finally:
-
-            print(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/\n")
 
     def createFileDirectory(self, fileName:str, dir:bool):
 
-            try:
-                stdin, stdout, stderr = self.client.exec_command('dir /b')  # Example command
-                result = stdout.read().decode().split()
-                if fileName in result:
+        try:
+            stdin, stdout, stderr = self.client.exec_command('dir /b')  # Example command
+            result = stdout.read().decode().split()
+            if fileName in result:
+                print(check_mark, end=' ')
+                print(f"File/Directory {fileName} already created")
+            else :
+                if dir:
+                    print(f"\nCreating file/folder {fileName} .....")
+                    self.client.exec_command(f'mkdir {fileName}')
                     print(check_mark, end=' ')
-                    print(f"File/Directory {fileName} already created")
-                else :
-                    if dir:
-                        print(f"\nCreating file/folder {fileName} .....")
-                        self.client.exec_command(f'mkdir {fileName}')
-                        print(check_mark, end=' ')
-                        print(f"File/Directory {fileName} successfully created")
-                    else:
-                        print('Not configured yet')
+                    print(f"File/Directory {fileName} successfully created")
+                else:
+                    print('Not configured yet')
 
-            except Exception as e:
-                print(f"Error ({self.host}@{self.ip}): {e}")
+        except Exception as e:
+            print(f"Error ({self.host}@{self.ip}): {e}")
 
 
     def close(self):
         # self.client.close()
-        self.client = f"Client closed for !{self.ip}\n-----------------------------------------------------------------\n\n"
+        self.client = f"Client closed for {self.ip}!\n-----------------------------------------------------------------\n\n"
         print(check_mark, end=' ')
         print(self.client)
 

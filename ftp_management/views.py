@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage
 import os
 from . import services
 
-root = "C:\LAB-PROJECTs\\network_files_management\media\\"
+root = "C:\\LAB-PROJECTs\\network_files_management\\media\\"
 host_ = 'LAB-C113'
 password_ = 'LAB-C113'
 global DEVICES
@@ -82,6 +82,10 @@ def upload_directory(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
+# session = services.Session(host_, '192.168.1.153', password_)
+# session.make_ssh_connection()
+# session.copy_file_to_remote_client('C:\\Users\\LABC113-Ressources\\TEST-28.txt', False)
+# session.close()
 
 def transfer_files(paths, r=False):
 
@@ -96,7 +100,6 @@ def transfer_files(paths, r=False):
             session.make_ssh_connection()
             createDirectoryIfNotExist(services.default_dest_folder, session)
 
-            print(session.client)
             for path in paths:
                 temp_ip = session.copy_file_to_remote_client(path, r)
             if temp_ip == ip[1]:
