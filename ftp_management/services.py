@@ -20,15 +20,14 @@ class Session:
 
     def make_ssh_connection(self):
         print(f"-------------------------------------------------------------------\nEtablishing SSH connection with {self.ip} .....")
-        self.client = "Client created"
-        # self.client = paramiko.SSHClient()
-        # self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.client = paramiko.SSHClient()
+        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         try:
             self.set_fingerprint()
-            # self.client.connect(self.ip, username=self.host, password=self.password)
-            # stdin, stdout, stderr = client.exec_command('cd')  # Example command
-            # print("OK: Connected to : " + stdout.read().decode())
+            self.client.connect(self.ip, username=self.host, password=self.password)
+            stdin, stdout, stderr = client.exec_command('cd')  # Example command
+            print("OK: Connected to : " + stdout.read().decode())
         except Exception as e:
             print(f"Error ({self.host}@{self.ip}): {e}")
         finally:
@@ -47,13 +46,13 @@ class Session:
 
         try:
             # Run the command as a subprocess
-            # p = subprocess.Popen(
-            #     command,
-            #     stdin=subprocess.PIPE,
-            #     stdout=subprocess.PIPE,
-            #     stderr=subprocess.PIPE,
-            #     text=True
-            # )
+            p = subprocess.Popen(
+                command,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
 
             # Capture the output and errors
             # output, errors = p.communicate()
@@ -70,10 +69,10 @@ class Session:
 
         try:
             # Now, use SCP to copy the file
-            # with SCPClient(self.client.get_transport()) as scp:
-            #     print(f"Copying {file} to remote server...")
-            #     scp.put(file, f'./{default_dest_folder}/', r)  # Upload file to the remote directory
-            #     print(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/")
+            with SCPClient(self.client.get_transport()) as scp:
+                print(f"Copying {file} to remote server...")
+                scp.put(file, f'./{default_dest_folder}/', r)  # Upload file to the remote directory
+                print(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/")
             if file is not None:
                 print(f"Copying {file} to remote server...")
                 print(check_mark, end=' ')
