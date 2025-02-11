@@ -1,3 +1,4 @@
+import datetime
 
 import paramiko
 import subprocess
@@ -8,6 +9,13 @@ adapter_name = 'wireless lan adapter wi-fi:'
 default_dest_folder = 'LAB-C113-RESSOURCES'
 check_mark = '===>'
 # check_mark = check_mark.encode()
+
+shared_files_dirs_log = 'shared_files_dirs_log.txt'
+def setLog(row):
+    with open(shared_files_dirs_log, 'a') as log:
+        content = f'{datetime.datetime.now()} : {row}'
+        log.write(content)
+    return
 
 class Session:
 
@@ -73,11 +81,8 @@ class Session:
             with SCPClient(self.client.get_transport()) as scp:
                 print(f"Copying {file} to remote server...")
                 scp.put(file, f'./{default_dest_folder}/', r)  # Upload file to the remote directory
-                print(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/")
-            if file is not None:
-                print(f"Copying {file} to remote server...")
                 print(check_mark, end=' ')
-                print(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/\n")
+                setLog(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/")
                 return self.ip
         except Exception as e:
             print(f"Error : {e}")
@@ -97,6 +102,7 @@ class Session:
                     self.client.exec_command(f'mkdir {fileName}')
                     print(check_mark, end=' ')
                     print(f"File/Directory {fileName} successfully created")
+                    setLog(f"File/Directory {fileName} successfully created to {self.ip}:./")
                 else:
                     print('Not configured yet')
 

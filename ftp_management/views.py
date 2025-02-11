@@ -112,6 +112,8 @@ def transfer_files(paths, r=False):
                 if temp_ip == ip[1]:
                     hosts['ips'].append(temp_ip)
                 session.close()
+            else:
+                print("Devices is not registered in LABC113");
         return hosts
     except Exception as e:
         print(f'Error sharing files : {e}')
