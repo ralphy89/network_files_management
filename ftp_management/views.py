@@ -59,8 +59,8 @@ def upload_files(request):
             file_path = default_storage.save(f'uploads\\{file.name}', file)
             saved_files.append(f"{root}{file_path}")
         print('Sharing files .... ')
-        hosts = transfer_files(saved_files, False)
-        return JsonResponse({'status': 'success', 'files': saved_files, 'hosts': hosts})
+        hosts, failed = transfer_files(saved_files, False)
+        return JsonResponse({'status': 'success', 'files': saved_files, 'hosts': hosts, 'failed': failed})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 @csrf_exempt
@@ -117,6 +117,7 @@ def transfer_files(paths, r=False):
                 session.close()
             else:
                 print("Devices is not registered in LABC113");
+
         return hosts, failed
     except Exception as e:
         print(f'Error sharing files : {e}')
