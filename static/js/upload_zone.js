@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </ul>
                     <h3 class="btn-danger">Failed for : </h3>
                     <ul style="list-style: none; padding: 0; margin: 0;">
-                       ${shared_ip(data.fails.ips)}
+                       ${shared_ip(data.failed.ips)}
                     </ul>
                            `,
             customClass: {
