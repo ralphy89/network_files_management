@@ -13,7 +13,8 @@ check_mark = '===>'
 shared_files_dirs_log = 'shared_files_dirs_log.txt'
 def setLog(row):
     with open(shared_files_dirs_log, 'a') as log:
-        content = f'{datetime.datetime.now()} : {row}'
+
+        content = f'New Log Session\n{datetime.datetime.now()} : {row}\n'
         log.write(content)
     return
 
