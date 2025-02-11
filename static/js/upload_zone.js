@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('files[]', file); // Add files to the FormData object
         });
         Swal.fire({
-            title: 'Loading...',
+            title: 'Sharing...',
             html: '<i class="fas fa-spinner fa-spin" style="font-size:24px"></i>',
             allowOutsideClick: false, // Prevent closing the popup by clicking outside
             showConfirmButton: false // Hide the confirm button

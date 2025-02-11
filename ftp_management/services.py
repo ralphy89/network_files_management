@@ -13,8 +13,7 @@ check_mark = '===>'
 shared_files_dirs_log = 'shared_files_dirs_log.txt'
 def setLog(row):
     with open(shared_files_dirs_log, 'a') as log:
-
-        content = f'New Log Session\n{datetime.datetime.now()} : {row}\n'
+        content = f'{datetime.datetime.now()} : {row}\n'
         log.write(content)
     return
 
@@ -27,23 +26,38 @@ class Session:
         self.client = None
 
     def make_ssh_connection(self):
-        self.set_fingerprint()
+        if self.is_pc_connected():
+            self.set_fingerprint()
 
-        print(f"-------------------------------------------------------------------\nEtablishing SSH connection with {self.ip} .....")
-        self.client = paramiko.SSHClient()
-        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            print(f"-------------------------------------------------------------------\nEtablishing SSH connection with {self.ip} .....")
+            self.client = paramiko.SSHClient()
+            self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
+            try:
+                self.client.connect(self.ip, username=self.host, password=self.password)
+                stdin, stdout, stderr = self.client.exec_command('cd')  # Example command
+                print("\nOK: Connected to : " + stdout.read().decode())
+                print(check_mark, end=' ')
+                print(f'Etablish SSH Connection successfully with {self.ip}!!!')
+                return True
+            except Exception as e:
+                print(f"Error ({self.host}@{self.ip}): {e}")
+        else :
+            return False
+
+    def is_pc_connected(self):
         try:
-            self.client.connect(self.ip, username=self.host, password=self.password)
-            stdin, stdout, stderr = self.client.exec_command('cd')  # Example command
-            print("\nOK: Connected to : " + stdout.read().decode())
-            print(check_mark, end=' ')
-            print(f'Etablish SSH Connection successfully with {self.ip}!!!')
+            # Ping the IP address
+            response = subprocess.run(["ping", "-c", "1", self.ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            # Check the return code to determine if the ping was successful
+            if response.returncode == 0:
+                return True
+            else:
+                return False
         except Exception as e:
-            print(f"Error ({self.host}@{self.ip}): {e}")
-
-
-
+            print(f"Is PC Connected : An error occurred: {e}")
+            return False
 
     def set_fingerprint(self):
         # Construct the SSH command with StrictHostKeyChecking=accept-new to accept the fingerprint and exit
