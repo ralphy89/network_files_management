@@ -57,6 +57,8 @@ class Session:
 
                 return True
             else:
+                print(f"Ping Test {self.ip} Failed")
+
                 return False
         except Exception as e:
             print(f"Is PC Connected : An error occurred: {e}")

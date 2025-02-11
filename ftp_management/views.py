@@ -76,8 +76,8 @@ def upload_directory(request):
                 return JsonResponse({'status': 'error', 'message': 'Invalid directory root.', 'directory': directory_root})
             saved_files.append(directory_root)
 
-        hosts = transfer_files(saved_files, True)
-        return JsonResponse({'status': 'success', 'files': saved_files, 'hosts': hosts})
+        hosts, failed = transfer_files(saved_files, True)
+        return JsonResponse({'status': 'success', 'files': saved_files, 'hosts': hosts, 'failed': failed})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
@@ -117,7 +117,7 @@ def transfer_files(paths, r=False):
                 session.close()
             else:
                 print("Devices is not registered in LABC113");
-        return hosts
+        return hosts, failed
     except Exception as e:
         print(f'Error sharing files : {e}')
 

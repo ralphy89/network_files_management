@@ -24,6 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <ul style="list-style: none; padding: 0; margin: 0;">
                        ${shared_ip(data.hosts.ips)}
                     </ul>
+                    <h3 class="btn-danger">Failed for : </h3>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                       ${shared_ip(data.fails.ips)}
+                    </ul>
                            `,
             customClass: {
                 popup: 'swal-popup',
