@@ -96,6 +96,7 @@ def checkMac(mac):
 def transfer_files(paths, r=False):
 
     hosts = {'ips': []}
+    failed = {'ips': []}
     try:
         temp_ip = ''
         DEVICES = services.get_devices()
@@ -111,7 +112,9 @@ def transfer_files(paths, r=False):
                         temp_ip = session.copy_file_to_remote_client(path, r)
                     if temp_ip == ip[1]:
                         hosts['ips'].append(temp_ip)
-                    session.close()
+                else:
+                    failed['ips'].append(ip[1])
+                session.close()
             else:
                 print("Devices is not registered in LABC113");
         return hosts

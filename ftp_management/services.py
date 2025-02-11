@@ -47,11 +47,14 @@ class Session:
 
     def is_pc_connected(self):
         try:
+            print(f"Ping Test {self.ip}")
             # Ping the IP address
             response = subprocess.run(["ping", "-c", "1", self.ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
             # Check the return code to determine if the ping was successful
             if response.returncode == 0:
+                print(f"Ping Test {self.ip} Successfull")
+
                 return True
             else:
                 return False
