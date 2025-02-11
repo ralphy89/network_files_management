@@ -56,7 +56,7 @@ def upload_files(request):
         files = request.FILES.getlist('files[]')  # Access the array of files
         saved_files = []
         for file in files:
-            file_path = default_storage.save(f'uploads/{file.name}', file)
+            file_path = default_storage.save(f'uploads\\{file.name}', file)
             saved_files.append(f"{root}{file_path}")
         print('Sharing files .... ')
         hosts = transfer_files(saved_files, False)
