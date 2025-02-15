@@ -57,7 +57,9 @@ class Session:
 
                 return True
             else:
+
                 print(f"Ping Test {self.ip} Failed")
+                setLog(f"Ping Test {self.ip} Failed")
 
                 return False
         except Exception as e:
@@ -105,6 +107,8 @@ class Session:
                 setLog(f"File/Dir '{file}' copied successfully to {self.ip}:./{default_dest_folder}/")
                 return self.ip
         except Exception as e:
+
+            setLog(f"File/Dir has'nt been shared to {self.ip} : Failed")
             print(f"Error : {e}")
 
 
