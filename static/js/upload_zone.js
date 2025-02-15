@@ -197,13 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('dirs[]', dir); // Add dirs to the FormData object
 
         });
-
+        Swal.fire({
+            title: 'Sharing...',
+            html: '<i class="fas fa-spinner fa-spin" style="font-size:24px"></i>',
+            allowOutsideClick: false, // Prevent closing the popup by clicking outside
+            showConfirmButton: false // Hide the confirm button
+        });
         fetch('/upload-d', {
             method: 'POST',
             body: formData,
         })
             .then((response) => {
                 if (!response.ok) {
+                    Swal.close();
                     Swal.fire({
                         icon: "error",
                         title: "Oops...",
@@ -216,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then((data) => {
                 if (data.status === SUCCESS) {
+                    Swal.close();
                     display_alert(data);
                     directories = []
                     update_file_list(files, directories);
