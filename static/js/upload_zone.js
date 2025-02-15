@@ -143,12 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
     share_all_btn.addEventListener('click', () => {
         console.log("Files       : " , files);
         console.log("Directories : " , directories);
-        const upF = files.length > 0 ? uploadFile(files) : '';
-        const upD = directories.length > 0 ? uploadDirectory(directories) : '';
+        const upF = files.length > 0 ? uploadFile(files, directories.length > 0) : '';
         // files = [];
         // directories = [];
     })
-    const uploadFile = (files_) => {
+    const uploadFile = (files_, hasDir) => {
         const formData = new FormData(); // Create a FormData object
 
         files_.forEach((file) => {
@@ -186,6 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     files = []
                     update_file_list(files, directories);
                 }
+                if(hasDir){
+                    uploadDirectory(directories);
+                }
                 console.log('Upload Success:', data);
             })
             .catch((error) => console.error('Upload Error:', error));
@@ -198,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         });
         Swal.fire({
-            title: 'Sharing...',
+            title: 'Sharing Dir(s)...',
             html: '<i class="fas fa-spinner fa-spin" style="font-size:24px"></i>',
             allowOutsideClick: false, // Prevent closing the popup by clicking outside
             showConfirmButton: false // Hide the confirm button
