@@ -12,7 +12,7 @@ check_mark = '===>'
 
 shared_files_dirs_log = 'shared_files_dirs_log.txt'
 def setLog(row):
-    with open(shared_files_dirs_log, 'a') as log:
+    with open(shared_files_dirs_log, 'w') as log:
         content = f'{datetime.datetime.now()} : {row}\n'
         log.write(content)
     return
@@ -102,7 +102,7 @@ class Session:
                 print(f"Copying {file} to remote server...")
                 scp.put(file, f'./{default_dest_folder}/', r)  # Upload file to the remote directory
                 print(check_mark, end=' ')
-                setLog(f"File '{file}' copied successfully to {self.ip}:./{default_dest_folder}/")
+                setLog(f"File/Dir '{file}' copied successfully to {self.ip}:./{default_dest_folder}/")
                 return self.ip
         except Exception as e:
             print(f"Error : {e}")

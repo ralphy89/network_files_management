@@ -108,8 +108,8 @@ def transfer_files(paths, r=False):
                 if(session.make_ssh_connection()):
                     createDirectoryIfNotExist(services.default_dest_folder, session)
 
-                    for path in paths:
-                        temp_ip = session.copy_file_to_remote_client(path, r)
+
+                    temp_ip = session.copy_file_to_remote_client(paths, r)
                     if temp_ip == ip[1]:
                         hosts['ips'].append(temp_ip)
                 else:
