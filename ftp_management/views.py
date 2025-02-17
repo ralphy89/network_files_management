@@ -1,9 +1,16 @@
-from django.shortcuts import render
+import time
+
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core.files.storage import default_storage
+from django.contrib.auth import authenticate, login, logout as auth_logout
+from django.contrib import messages
 import os
+import threading
+from datetime import datetime
 from . import services
 
 root = "C:\\LAB-PROJECTs\\network_files_management\\media\\"
@@ -13,25 +20,70 @@ global DEVICES
 DEVICES = list()
 # Create your views here.
 
-def home(request):
-    template = 'home.html'
+
+interval = 120
+def refresh():
     global DEVICES
-    if len(DEVICES) == 0:
-        DEVICES = services.get_devices() # [['name', 'ip', 'mac'], ..., ...]
-    if (len(DEVICES) > 0):
-        connected_devices = len(DEVICES)
-        page_object = {
-            'connected_devices': connected_devices,
-            'devices': DEVICES
-        }
-        assert template == 'home.html', 'template should be \"home.html\"'
+    DEVICES = services.get_devices() # [['name', 'ip', 'mac'], ..., ...]
+    print("Rescanning...")
+    threading.Timer(interval, refresh).start()
+
+ # Interval in seconds
+refresh()
+
+
+def logout(request):
+    auth_logout(request)
+    return render(
+        request,
+        'login.html',
+    )
+@csrf_exempt
+def home(request):
+    html_pages = ['home.html', 'login.html']
+    template = html_pages[1]
+    user_name = ''
+    password = ''
+
+    if request.method == 'POST':
+
+        user_name = request.POST['username']
+        password = request.POST['password']
+        valid_user = authenticate(request, username=user_name, password=password)
+
+        if valid_user is not None:
+            login(request, valid_user)
+            template = html_pages[0]
+            # messages.success(request, "Login Successfully")
+        else:
+            messages.error(request, "Incorrect username or password")
+
+    if request.user.is_authenticated:
+        template = html_pages[0]
+
+    if template == 'home.html':
+        global DEVICES
+        if len(DEVICES) == 0:
+            DEVICES = services.get_devices() # [['name', 'ip', 'mac'], ..., ...]
+        if (len(DEVICES) > 0):
+            connected_devices = len(DEVICES)
+            page_object = {
+                'connected_devices': connected_devices,
+                'devices': DEVICES
+            }
+            return render(
+                request,
+                template,
+                page_object,
+            )
+        return HttpResponse("ERROR GETTING YOUR LOCAL IP ADDRESS, Please make sure you're connected to the network!")
+    else:
         return render(
             request,
             template,
-            page_object,
         )
-    return HttpResponse("ERROR GETTING YOUR LOCAL IP ADDRESS, Please make sure you're connected to the network!")
 
+@login_required(login_url='login-page')
 def files_management(request):
     page_object = {}
     global DEVICES
@@ -49,7 +101,7 @@ def files_management(request):
 
 
 
-
+@login_required(login_url='login-page')
 @csrf_exempt
 def upload_files(request):
     if request.method == 'POST':
@@ -63,6 +115,7 @@ def upload_files(request):
         return JsonResponse({'status': 'success', 'files': saved_files, 'hosts': hosts, 'failed': failed})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
+@login_required(login_url='login-page')
 @csrf_exempt
 def upload_directory(request):
     saved_files = []

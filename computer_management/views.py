@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from .models import Computer, Student, History, Schedule
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
 import datetime
@@ -15,6 +16,7 @@ class DateTimeEncoder(json.JSONEncoder):
             return obj.isoformat()
 # Create your views here.
 
+@login_required(login_url='login-page')
 def computerManagements(request):
     template = 'computerManagement.html'
 
@@ -31,6 +33,7 @@ def computerManagements(request):
         page_object,
     )
 
+@login_required(login_url='login-page')
 def scheduleManagements(request):
     template = 'scheduleManagement.html'
 
@@ -49,6 +52,7 @@ def scheduleManagements(request):
         template,
         page_object,
     )
+@login_required(login_url='login-page')
 def guests_management(request):
     template = 'guestsManagement.html'
 
@@ -86,7 +90,7 @@ def hasConflict(day, s_hour_, e_hour_, student_, computer_, id_to_exclude):
 
     return False
 
-
+@login_required(login_url='login-page')
 @csrf_exempt
 def addSchedule(request):
     if request.method == 'POST':
@@ -108,6 +112,7 @@ def addSchedule(request):
             return JsonResponse({'status': 'warning', 'message':'Schedule Conflict detected!!!'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
+@login_required(login_url='login-page')
 @csrf_exempt
 def updateSchedule(request):
     if request.method == 'POST':
@@ -132,6 +137,7 @@ def updateSchedule(request):
             return JsonResponse({'status': 'warning', 'message':'Schedule Conflict detected!!!'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
+@login_required(login_url='login-page')
 @csrf_exempt
 def get_schedule(request):
     if request.method == 'POST':
@@ -144,6 +150,7 @@ def get_schedule(request):
     return JsonResponse({'status': 'success', 'schedule': schedule})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
+@login_required(login_url='login-page')
 @csrf_exempt
 def checkSchedule(request):
     if request.method == 'POST':
@@ -160,6 +167,7 @@ def checkSchedule(request):
             return JsonResponse({'status': 'warning', 'message':'Schedule Conflict detected!!!'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
+@login_required(login_url='login-page')
 @csrf_exempt
 def get_histories(request):
     if request.method == 'POST':
@@ -170,7 +178,7 @@ def get_histories(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 
-
+@login_required(login_url='login-page')
 @csrf_exempt
 def get_student(request):
     if request.method == 'POST':
@@ -184,6 +192,7 @@ def get_student(request):
     return JsonResponse({'status': 'success', 'student': student})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
+@login_required(login_url='login-page')
 @csrf_exempt
 def addComputer(request):
 
@@ -197,6 +206,7 @@ def addComputer(request):
 
 
 @csrf_exempt
+@login_required(login_url='login-page')
 def editComputer(request):
     if request.method == 'POST':
         POST_data = json.loads(request.POST['computer'])
@@ -210,6 +220,7 @@ def editComputer(request):
 
 
 @csrf_exempt
+@login_required(login_url='login-page')
 def addStudent(request):
     if request.method == 'POST':
         POST_data = json.loads(request.POST['student'])
@@ -259,6 +270,7 @@ def addStudent(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 @csrf_exempt
+@login_required(login_url='login-page')
 def updateStudentStatus(request):
     if request.method == 'POST':
         POST_data = json.loads(request.POST['update'])
@@ -303,6 +315,7 @@ def updateStudentStatus(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 @csrf_exempt
+@login_required(login_url='login-page')
 def updateStudent(request):
     if request.method == 'POST':
         POST_data = json.loads(request.POST['student'])
@@ -324,6 +337,7 @@ def updateStudent(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 @csrf_exempt
+@login_required(login_url='login-page')
 def searchStudent(request):
     if request.method == 'POST':
         POST_data = str(json.loads(request.POST['query'])['arg']).strip()

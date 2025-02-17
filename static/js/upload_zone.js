@@ -1,4 +1,4 @@
-
+  
 document.addEventListener('DOMContentLoaded', () => {
     const fileDropZone = document.getElementById('file_upload_zone');
     const fileInput = document.getElementById('file_input');
