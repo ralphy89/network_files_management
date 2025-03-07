@@ -29,9 +29,9 @@ def refresh():
     threading.Timer(interval, refresh).start()
 
  # Interval in seconds
-refresh()
+#refresh()
 
-
+@login_required(login_url='login-page')
 def logout(request):
     auth_logout(request)
     return render(

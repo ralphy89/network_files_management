@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ftp_management',
     'computer_management',
+    'quizHub',
 ]
 
 MIDDLEWARE = [

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Computer Lab Management</title>
+    <title>Login - QuizHub </title>
     <link rel="icon" type="image/x-icon" href="https://uniq.edu.ht/images/logo.png">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -24,20 +24,20 @@
     <div class="login-container">
         <div class="form-header">
             <div class="logo">
-                <i class="fas fa-laptop-code"></i>
+                <i class="fas fa-gamepad"></i>
             </div>
             <h1>Welcome Back</h1>
-            <p>Enter your credentials to access the lab management system</p>
+            <p>Enter your credentials to access <strong> QuizHub </strong> system</p>
         </div>
 
-        <form action="/" class="login-form" method="post">
+        <form action="/login-page-quizHub" class="login-form" method="post">
             {% csrf_token %}
 
             <div class="form-group">
                 <div class="input-icon">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-envelope"></i>
                 </div>
-                <input id="username" type="text" name="username" required placeholder="Username">
+                <input id="email" type="email" name="email" required placeholder="Email">
                 <div class="input-line"></div>
             </div>
 
@@ -55,12 +55,17 @@
                     <span class="checkmark"></span>
                     Remember me
                 </label>
-{#                <a href="#" class="forgot-password">Forgot password?</a>#}
+                {#                <a href="#" class="forgot-password">Forgot password?</a>#}
             </div>
 
             <button type="submit" class="login-btn">
                 <span>Login</span>
                 <i class="fas fa-arrow-right"></i>
+            </button>
+            <!-- Create Account Button -->
+            <button type="button" class="create-account-btn" onclick="window.location.href='/createAccount'">
+                <span>Create Account</span>
+                <i class="fas fa-user-plus"></i>
             </button>
         </form>
 
@@ -75,5 +80,6 @@
         {% endif %}
     </div>
 </div>
+<script src="{% static '/login.js' %}"></script>
 </body>
 </html>

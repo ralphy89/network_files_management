@@ -1,0 +1,93 @@
+{% load static %}
+<div class="question-card form-card">
+    <div class="question-header" style="font-size: 20px">
+        <span class="question-type"><i class="fas fa-plus-circle"></i> Add New Question below</span>
+    </div>
+    <div class="question-content">
+        <form class="add-question-form">
+            <div class="form-group">
+                <label for="question-type" class="form-label">Question Type</label>
+                <select name="question_type" id="question-type" class="form-control">
+                    <option value="MC">Multiple Choice</option>
+                    <option value="SA">Short Answer</option>
+                </select>
+            </div>
+
+            <div class="form-group has-validation">
+                <label for="question-text" class=" form-label">Question Text</label>
+                <textarea  required name="text" id="question-text" class="form-control " rows="3" placeholder="Enter your question here"></textarea>
+                <small id="textNameHelp" class="form-text text-muted invalid-feedback">Please provide a Question Text.</small>
+            </div>
+
+            <div id="answers-container">
+                <!-- Multiple Choice Answers -->
+                <div class="multiple-choice-answers">
+                    <label class="form-label">Answers</label>
+                    <div class="answer-inputs">
+                        <div class="answer-input-group">
+                            <input type="text" class="form-control" placeholder="Answer 1">
+                            <div class="form-check">
+                                <input checked type="checkbox" class="form-check-input" id="correct-1">
+                                <label class="form-check-label" for="correct-1">Correct</label>
+                            </div>
+                        </div>
+                        <div class="answer-input-group">
+                            <input type="text" class="form-control" placeholder="Answer 2">
+                            <div class="form-check">
+                                <input  type="checkbox" class="form-check-input" id="correct-2">
+                                <label class="form-check-label" for="correct-2">Correct</label>
+                            </div>
+                        </div>
+                        <div class="answer-input-group">
+                            <input type="text" class="form-control" placeholder="Answer 3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="correct-3">
+                                <label class="form-check-label" for="correct-3">Correct</label>
+                            </div>
+                        </div>
+                        <div class="answer-input-group">
+                            <input value="Je ne sais pas" type="text" class="form-control" placeholder="Answer 4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="correct-4">
+                                <label class="form-check-label" for="correct-4">Correct</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Short Answer -->
+                <div class="short-answer-input" style="display: none;">
+                    <label for="correct-answer" class="form-label">Correct Answer</label>
+                    <textarea id="correct-answer" class="form-control" rows="3" placeholder="Enter the correct answer">
+
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="points" class="form-label">Points</label>
+                <input value="2" type="number" id="points" class="form-control" min="1" max="100" placeholder="Enter points for this question">
+            </div>
+
+            <div class="question-buttons question-actions">
+                <button type="button" id="add-answer-btn">
+                    <i class="fas fa-plus"></i> Add Answer
+                </button>
+                <button type="button" id="save-question-btn" onclick="saveQuestion({{ quiz_id }}, '{{ csrf_token }}')">
+                    <i class="fas fa-save"></i> Save Question
+                </button>
+                <button style="background: red" type="reset" id="reset-question-btn" class="btn btn-danger">
+                    <i class="fas fa-refresh"></i> Clear Form
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+
+
+

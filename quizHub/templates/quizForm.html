@@ -1,0 +1,59 @@
+{% load static %}
+
+<!-- Modal form -->
+<link rel="stylesheet" href="{% static 'css/computer_card_dark.css' %}">
+<div data-bs-backdrop="static"  class="modal fade " id="quiz-form-modal" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card mb-0">
+                    <div class="card-header text-left">
+                        <h3 id="modal-title-h3" class="fw-bolder text-success">Add Quiz</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Close form"></button>
+                    </div>
+                    <div class="card-body">
+                        <form action="/prepareQuiz" role="form text-left" method="post">
+                            <label>Title</label>
+                            <div class="input-group mb-3 has-validation">
+                                <input
+                                        id="quiz-title"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Quiz 1"
+                                        aria-label="Quiz Title"
+                                        aria-describedby="quiz-addon"
+                                        required="required"
+                                        name="title"
+                                />
+                                <small id="quizTitleHelp" class="form-text text-muted invalid-feedback">Please provide a valid title.</small>
+                            </div>
+                            <label>Description</label>
+                            <div class="input-group mb-3 has-validation">
+                                <textarea
+                                        id="quiz-description"
+                                        class="form-control"
+                                        placeholder="Ce quiz teste vos connaissances de base en cybersécurité"
+                                        aria-label="Quiz Description"
+                                        aria-describedby="quizDescription-addon"
+                                        required="required"
+                                        name="description"
+                                >
+                                </textarea>
+                                <small id="quizDescription Help" class="form-text text-muted invalid-feedback">Please provide a valid description.</small>
+                            </div>
+                            <div class="text-center">
+                                <button id="continue-quiz-title-btn" type="submit"
+                                        class="btn btn-round btn-success btn-lg w-100 mt-4 mb-0">
+                                    Continue
+                                    <i class="fa fa-arrow-right" style="color: whitesmoke"></i>
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

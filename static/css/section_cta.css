@@ -32,12 +32,12 @@
 }
 
 /* Register Student Button */
-#btn-register-student, #btn-register-schedule {
+#btn-register-student, #btn-register-schedule, #btn-add-quiz {
     background: #1c3e4b !important;
     color: white !important;
 }
 
-#btn-register-student:hover, #btn-register-schedule:hover {
+#btn-register-student:hover, #btn-register-schedule:hover, #btn-add-quiz:hover {
     background: #23576b !important;
 }
 

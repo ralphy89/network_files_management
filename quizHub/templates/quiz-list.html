@@ -1,0 +1,117 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/quiz-list.css' %}">
+<section id="quiz-list">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Quiz Management</h2>
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search quizzes by title, date, or status...">
+            </div>
+        </div>
+
+        <div class="quiz-container">
+            {% for quiz in quiz_list %}
+            <!-- Quiz Card 1 -->
+                <div class="quiz-card">
+                <div class="quiz-header" >
+                    <div class="quiz-info" >
+                        <div class="title-status-wrapper">
+
+                            <div onclick="window.location.href = 'quizHub/prepareQuiz/{{ quiz.quiz_id }}/edit/{{ quiz.title }}'" id="{{ quiz.quiz_id }}" class="stat-item stat-button" aria-roledescription="Click to Edit Quiz">
+                                <i class="fas fa-edit" ></i>
+                                <span>{{ quiz.title }}</span>
+                            </div>
+                            {% if quiz.status == 'S' %}
+                                <span class="status-badge status-scheduled">Scheduled</span>
+                            {% elif quiz.status == 'A' %}
+                                <span class="status-badge status-ended">Archived</span>
+                            {% elif quiz.status == 'P' %}
+                                <span class="status-badge status-active">Published</span>
+                            {% else %}
+                                <span class="status-badge status-draft">Draft</span>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="quiz-stats">
+                        <div class="stat-item stat-button" aria-roledescription="see submissions">
+                            <i class="fas fa-users" ></i>
+                            <span>{{ quiz.submissions }} submissions</span>
+                        </div>
+
+                        <div class="stat-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>{{ quiz.start }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ quiz.duration }} mins</span>
+                        </div>
+                        <div class="stat-item" onclick="toggleQuiz(this)" aria-description="More details">
+                            <i class="fa-solid fa-caret-down fa-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="quiz-content">
+                    <hr>
+                    <div class="text-center ">
+                        <h3 class="quiz-title">{{ quiz.description }}</h3>
+                    </div>
+                    <hr>
+
+                    <ul class="question-list">
+
+                        {% for question in questions %}
+                            {% if question.quiz_id == quiz.quiz_id %}
+                                <li class="question-item">
+                                    <div class="question-header">
+                                        <span>{{ question.question_text }}</span>
+                                        <span class="question-points">{{ question.points }} points</span>
+                                    </div>
+                                    <ul class="answer-list">
+                                        {% for answer in answers %}
+                                            {% if answer.question_id == question.question_id %}
+                                            <li class="answer-item {% if answer.is_correct %} correct {% endif %}">
+                                                {{ answer.text }}
+                                            </li>
+                                           {% endif %}
+                                        {% endfor %}
+                                    </ul>
+{#                            <div class="action-buttons">#}
+{#                                <button><i class="fas fa-edit"></i> Edit</button>#}
+{#                                <button><i class="fas fa-chart-bar"></i> Statistics</button>#}
+{#                            </div>#}
+                        </li>
+                            {% endif %}
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </div>
+            {% empty %}
+                <div class="quiz-card">
+
+                    <h4 class="text text-center text-warning">
+                        <i class="fa fa-warning"></i>
+                        No quizzes have been added yet.
+                    </h4>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Add this to your existing CSS */
+    .title-status-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .quiz-title {
+        margin: 0;  /* Remove any default margins */
+    }
+</style>

@@ -1,0 +1,59 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/quiz-template.css' %}">
+<section id="questions-block">
+    {% include 'question_form.html' %}
+    <div id="questions-list">
+    {% for question in questions %}
+        <div class="question-card">
+            <div class="question-header">
+                <span class="question-type">
+                    {% if question.question_type == 'MC' %}
+                        Multiple Choice
+                    {% else %}
+                        Short Answer
+                    {% endif %}
+                    <span style="font-size: medium; border: 1px solid green" class="text-uppercase text-center badge text-success text-hide">{{ question.points }} points</span>
+                </span>
+
+                <div class="question-actions">
+                    <button class="edit-btn" onclick="editQuestion({{ question.question_id }})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="remove-btn" onclick="removeQuestion({{ question.question_id }})">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="question-content">
+                <div class="question-text">
+                    {{ question.question_text }}
+
+                </div>
+
+                <div class="answers-container">
+                    {% if question.question_type == 'MC' %}
+                        {% for answer in question.get_answers %}
+                            <div class="answer-item {% if answer.is_correct %}correct-answer{% else %}incorrect-answer{% endif %}">
+                                {{ answer.text }}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="answer-item correct-answer">
+                            {{ question.correct_answer }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="no-questions">
+            <p>No questions have been added to this quiz yet.</p>
+        </div>
+    {% endfor %}
+    </div>
+</section>
+<script src="{% static 'js/quiz-template.js' %}"></script>
+
+

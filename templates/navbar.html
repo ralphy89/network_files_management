@@ -35,9 +35,14 @@
                             <i class="fas fa-laptop me-2"></i>Computers Management
                         </a>
                     </li>
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link {% if 'guests' in request.path %}active{% endif %}" href="{% url 'guests-management' %}">#}
+{#                            <i class="fas fa-user me-2"></i>Guests Management#}
+{#                        </a>#}
+{#                    </li>#}
                     <li class="nav-item">
-                        <a class="nav-link {% if 'guests' in request.path %}active{% endif %}" href="{% url 'guests-management' %}">
-                            <i class="fas fa-user me-2"></i>Guests Management
+                        <a class="nav-link {% if 'quiz' in request.path %}active{% endif %}" href="{% url 'guests-management' %}">
+                            <i class="fas fa-qui me-2"></i>QuizHub Management
                         </a>
                     </li>
                     <li class="nav-item">
