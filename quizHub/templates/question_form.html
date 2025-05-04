@@ -1,5 +1,10 @@
 {% load static %}
-<div class="question-card form-card">
+{% if quiz_status == 'P' or quiz_status == 'A' %}
+    <p class="alert alert-warning">
+       <i class="fa fa-warning"></i> You cannot edit the quiz while it is being published/archived.
+    </p>
+{% else %}
+    <div class="question-card form-card">
     <div class="question-header" style="font-size: 20px">
         <span class="question-type"><i class="fas fa-plus-circle"></i> Add New Question below</span>
     </div>
@@ -85,6 +90,7 @@
         </form>
     </div>
 </div>
+{% endif %}
 
 
 

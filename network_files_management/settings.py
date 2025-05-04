@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+SESSION_COOKIE_AGE = 60 * 30  # Set session cookie age to 30 minutes (adjust as needed)
 
+SESSION_SAVE_EVERY_REQUEST = True  # Save the session on every request
 # Application definition
 
 INSTALLED_APPS = [
@@ -84,10 +86,9 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'USER': 'root',
-        'PASSWORD': 'AdminL@BC113!@#',
+        'PASSWORD': 'RalphSQL89$',
     }
 }
-
 
 
 # Password validation

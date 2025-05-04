@@ -12,6 +12,7 @@
     position: relative;
     overflow: hidden;
     min-height: 100vh;
+
 }
 
 #quiz-list::before {
@@ -34,7 +35,8 @@
     margin: 0 auto;
     padding: 0 2rem;
     position: relative;
-    z-index: 2;
+    z-index: 5;
+
 }
 
 .section-header {
@@ -162,7 +164,7 @@
 }
 
 .stat-item i {
-    color: #2ecc71;
+    color: #e30917;
 }
 
 .status-badge {
@@ -226,11 +228,12 @@
 }
 
 .question-header {
-    display: flex;
+    display: grid;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
     color: #ffffff;
+    grid-template-columns: 2fr 0.5fr;
 }
 
 .question-points {
@@ -269,6 +272,26 @@
     background: rgba(46, 204, 113, 0.1);
     border-color: #2ecc71;
     color: #2ecc71;
+}
+
+.answer-item.correct.selected {
+    background: rgba(46, 204, 113, 0.1);
+    border-color: #2ecc71;
+    color: #2ecc71;
+    box-shadow: 0 0 0 2px rgba(116, 222, 116, 0.58);
+
+}
+
+.answer-item.incorrect.selected {
+    background: rgba(238, 13, 54, 0.21);
+    border-color: #f64953;
+    color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(238, 13, 54, 0.47);
+
+}
+.answer-item.incorrect.selected::before {
+    content: 'X';
+    font-weight: bolder;
 }
 
 .answer-item.correct::before {

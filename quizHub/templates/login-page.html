@@ -20,6 +20,7 @@
         <span></span>
     </div>
 
+{% if not creatingAccount %}
     <!-- Login Form -->
     <div class="login-container">
         <div class="form-header">
@@ -60,10 +61,10 @@
 
             <button type="submit" class="login-btn">
                 <span>Login</span>
-                <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-sign-in-alt"></i>
             </button>
             <!-- Create Account Button -->
-            <button type="button" class="create-account-btn" onclick="window.location.href='/createAccount'">
+            <button type="button" class="create-account-btn" onclick="window.location.href='createAccount'">
                 <span>Create Account</span>
                 <i class="fas fa-user-plus"></i>
             </button>
@@ -79,6 +80,72 @@
             </div>
         {% endif %}
     </div>
+{% else %}
+    <div class="login-container">
+        <div class="form-header">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <h1>Welcome to QuizHub</h1>
+            <p>Please, fill out the fields below, then click on "Submit" to create your <strong> QuizHub </strong> account.</p>
+        </div>
+
+        <form action="/createAccount" class="login-form" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="input-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <input id="email" type="email" name="email" required placeholder="Email">
+                <div class="input-line"></div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <input id="firstname" type="text" name="firstname" required placeholder="First name">
+                <div class="input-line"></div>
+            </div>
+            <div class="form-group">
+                <div class="input-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <input id="laststname" type="text" name="lastname" required placeholder="Last name">
+                <div class="input-line"></div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <input id="password" type="password" name="password" required placeholder="Password">
+                <div class="input-line"></div>
+            </div>
+
+
+            <button type="submit" class="login-btn">
+                <span>Submit</span>
+                <i class="fas fa-sign-in-alt"></i>
+            </button>
+            <button type="button" class="create-account-btn" onclick="window.location.href='login-page-quizHub'">
+                <span>Already have an account ? Login</span>
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </form>
+
+        {% if messages %}
+            <div class="message-container">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+
 </div>
 <script src="{% static '/login.js' %}"></script>
 </body>

@@ -1,0 +1,158 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/quiz-list.css' %}">
+{% if "Teacher" in user.groups.all|stringformat:"s" %}
+    <section id="quiz-list">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-users"></i> Submissions ({{ submissions|length }}) </h2>
+            <hr>
+            <div class="text text-center text-success">
+                <h2>- {{ quiz.title }} - </h2>
+            </div>
+            <button onclick="sendResult({{ quiz.quiz_id }})" class="btn btn-success position-relative overflow-hidden d-flex align-items-center">
+                <span class="btn-glow"></span>
+                <i class="fas fa-share me-2"></i>
+                <span>Send results</span>
+                <div class="btn-shine"></div>
+            </button>
+        </div>
+
+        <div class="quiz-container">
+            {% for submission in submissions %}
+                <div class="quiz-card">
+                    <div class="quiz-header" >
+                        <div class="quiz-info" >
+                            <div class="title-status-wrapper">
+                                <div class="stat-item">
+                                    <i class="fa-solid fa-user fa-xl" ></i>
+                                    <span> {{ submission.student.last_name }} {{ submission.student.first_name }} - {{ submission.student.email }}</span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="quiz-stats">
+                            <div class="stat-item stat-button" aria-roledescription="Total quiz points">
+                                <i class="fas fa-trophy" ></i>
+                                <span>
+                                    <span class="fa text-success fa-xl"> {{ submission.score }}
+                                    </span> / {{ submission.quiz.total_point }}
+                                </span>
+                            </div>
+                            <div class="stat-item" aria-description="delay">
+                                <i class="fa-solid fa-clock"></i> Delay : {{ submission.delay }}
+                            </div>
+
+                            <div class="stat-item" onclick="toggleQuiz(this)" aria-description="More details">
+                                <i class="fa-solid fa-caret-down fa-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quiz-content">
+                        <hr>
+                        <div class="text-center ">
+                            <h3 class="quiz-title">{{ quiz.description }}</h3>
+                        </div>
+                        <hr>
+
+                        <ul class="question-list">
+
+                            {% for question in questions %}
+                                {% if question.quiz_id == quiz.quiz_id %}
+                                    <li class="question-item">
+                                        <div class="question-header">
+                                            <span>{{ question.question_text }}</span>
+                                            <span class="question-points">{{ question.points }} points</span>
+                                        </div>
+                                        <ul class="answer-list">
+
+                                            {% if question.question_type == 'MC' %}
+                                                <div class="answer-list">
+                                                    {% for answer in question.get_answers %}
+                                                        <li class="answer-item {% if answer.is_correct %} correct {% else %} incorrect {% endif %}
+                                                            {% for submission_answer in submission_answers %}
+                                                                {% if submission_answer.submission.student.id == submission.student.id %}
+                                                                    {% if answer.id == submission_answer.mca.id %}
+                                                                        selected
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                    text ">
+                                                            <div class="answer-text">{{ answer.text }}</div>
+                                                        </li>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <div data-question-id="{{ question.question_id }}" class="answer-item {% if not submitted %} answer-item-student
+                                                        {% else %} answer-item-student-submitted {% endif %} text-input-container">
+                                                    <input type="text" class="input-group" placeholder="Enter your answer here...">
+                                                </div>
+                                            {% endif %}
+
+                                        </ul>
+
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                        </ul>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+    <script>
+        const sendResult = (quizId) => {
+
+            const url = `/sendResults`;
+            Swal.fire({
+                title: "You're about to publish the results for this quiz, are you sure ?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+                confirmButtonColor: "#48c048",
+                confirmButtonText: "Yes, publish them!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            quiz_id: quizId
+                        }),
+                    }).then(response => {
+                        if (response.ok) {
+                            alert('Result sent successfully')
+                        } else {
+                            alert('Failed to publish the result');
+                        }
+                    });
+
+                }
+            });
+        }
+
+    </script>
+
+{% endif %}
+<style>
+    /* Add this to your existing CSS */
+    .title-status-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .quiz-title {
+        margin: 0;  /* Remove any default margins */
+    }
+</style>
+

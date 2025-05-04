@@ -1,9 +1,11 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/quiz-list.css' %}">
-<section id="quiz-list">
+{% if "Teacher" in user.groups.all|stringformat:"s" %}
+
+    <section id="quiz-list">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Quiz Management</h2>
+            <h2 class="section-title"><i class="fa fa-dashboard"></i> Dashboard</h2>
             <div class="search-wrapper">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" class="search-input" placeholder="Search quizzes by title, date, or status...">
@@ -18,7 +20,8 @@
                     <div class="quiz-info" >
                         <div class="title-status-wrapper">
 
-                            <div onclick="window.location.href = 'quizHub/prepareQuiz/{{ quiz.quiz_id }}/edit/{{ quiz.title }}'" id="{{ quiz.quiz_id }}" class="stat-item stat-button" aria-roledescription="Click to Edit Quiz">
+                            <div onclick="window.location.href = 'quizHub/prepareQuiz/{{ quiz.quiz_id }}/edit/{{ quiz.title }}'"
+                                 id="{{ quiz.quiz_id }}" class="stat-item stat-button" aria-roledescription="Click to Edit Quiz">
                                 <i class="fas fa-edit" ></i>
                                 <span>{{ quiz.title }}</span>
                             </div>
@@ -35,7 +38,7 @@
                         </div>
                     </div>
                     <div class="quiz-stats">
-                        <div class="stat-item stat-button" aria-roledescription="see submissions">
+                        <div {% if  quiz.submissions != 0 %} onclick="window.location.href = 'seeSubmissions/{{ quiz.quiz_id }}' " {% endif %} class="stat-item stat-button" aria-roledescription="see submissions">
                             <i class="fas fa-users" ></i>
                             <span>{{ quiz.submissions }} submissions</span>
                         </div>
@@ -102,7 +105,110 @@
         </div>
     </div>
 </section>
+{% else %}
+    <section id="quiz-list">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fa fa-dashboard"></i> Student Dashboard</h2>
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search quizzes by title, date, or status...">
+                </div>
+            </div>
 
+            <div class="quiz-container">
+                {% for quiz in quiz_list %}
+                    <!-- Quiz Card 1 -->
+                    {% if quiz.status == 'P' %}
+                        <div class="quiz-card" onclick="window.location.href = '{% url 'takeQuiz' quiz.quiz_id quiz.title %}'">
+                            <div class="quiz-header" >
+                            <div class="quiz-info" >
+                                <div class="title-status-wrapper">
+                                    <div class="stat-item">
+                                        <i class="fa-solid fa-clipboard-list fa-2xl" ></i>
+                                        <span> {{ quiz.title }} <br>
+                                            <strong>Teacher : </strong> {{ quiz.author }}</span>
+                                    </div>
+                                    {% if quiz.status == 'A' %}
+                                        <span class="status-badge status-ended">Archived</span>
+                                    {% elif quiz.status == 'P' %}
+                                        <span class="status-badge status-active">Active</span>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            <div class="quiz-stats">
+                                <div class="stat-item stat-button" aria-roledescription="Total quiz points">
+                                    <i class="fas fa-trophy" ></i>
+                                    <span>{{ quiz.total_point }} Points</span>
+                                </div>
+
+                                <div class="stat-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span> <strong>Since :</strong> {{ quiz.start|date:'D, M d, Y - h:i a' }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>{{ quiz.duration }} mins</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                {% endfor %}
+                <hr>
+                {% for submission in submission_list %}
+                    <!-- Quiz Card 1 -->
+                    {% if submission.quiz.status %}
+                        <div class="quiz-card" onclick="window.location.href = '{% url 'takeQuiz' submission.quiz.quiz_id submission.quiz.title %}'">
+                            <div class="quiz-header" >
+                                <div class="quiz-info">
+                                    <div class="title-status-wrapper">
+
+
+                                        <div class="stat-item">
+                                            <i class="fa-solid fa-clipboard-list fa-2xl" ></i>
+                                            <span> {{ submission.quiz.title }} <br>
+                                            <strong>Teacher : </strong> {{ quiz.author }}</span>
+                                        </div>
+
+                                        <span class="status-badge status-active">
+                                            <i class="fas fa-check"></i>Submitted
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="quiz-stats">
+                                    <div class="stat-item stat-button" aria-roledescription="Total quiz points">
+                                        <i class="fas fa-trophy" ></i>
+                                        <span>
+                                            <span class="fa text-success"> {{ submission.score }}
+                                            </span> / {{ submission.quiz.total_point }}
+                                        </span>
+                                    </div>
+
+                                    <div class="stat-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span> {{ submission.quiz.start|date:'D, M d, Y - h:i a' }}</span>
+                                    </div>
+
+                                    {% if not submission.isLate %}
+                                        <div class="stat-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Delay : Yes </span>
+                                    {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
 <style>
     /* Add this to your existing CSS */
     .title-status-wrapper {

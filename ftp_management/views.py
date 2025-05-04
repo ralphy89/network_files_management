@@ -21,7 +21,7 @@ DEVICES = list()
 # Create your views here.
 
 
-interval = 120
+interval = 10 * 60
 def refresh():
     global DEVICES
     DEVICES = services.get_devices() # [['name', 'ip', 'mac'], ..., ...]

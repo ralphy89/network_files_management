@@ -5,10 +5,343 @@
 {#<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">#}
 
 
-<section id="cta-btn" class="d-flex flex-wrap justify-content-center align-items-center py-4">
-    <button id="btn-add-quiz" class="btn btn-primary mx-2 my-2" data-bs-toggle="modal" data-bs-target="#quiz-form-modal">
-        <i class="fas fa-plus"></i> Add Quiz
-    </button>
+<!-- Hero-quizHub Section with Modern CTA Buttons -->
+<section id="hero-quizHub" class="position-relative d-flex align-items-center justify-content-center">
+    <!-- Animated Background with gradient overlay -->
+    <div class="overlay"></div>
+
+    <div id="particles-js" class="position-absolute w-100 h-100"></div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                {% if "Teacher" in user.groups.all|stringformat:"s" %}
+                    <h1 class="hero-quizHub-title mb-3 animate__animated animate__fadeInDown">Quiz Management System</h1>
+                    <p class="hero-quizHub-subtitle mb-4 animate__animated animate__fadeInUp animate__delay-1s">Create, manage and analyze interactive quizzes with ease</p>
+                {% endif %}
+                <!-- Modern CTA Button Section -->
+                <div id="" class="hero-quizHub-buttons d-flex flex-wrap justify-content-center align-items-center gap-3 py-4 animate__animated animate__fadeInUp animate__delay-2s">
+                    {% if "Teacher" in user.groups.all|stringformat:"s" %}
+                        <button id="btn-add-quiz" class="btn btn-primary position-relative overflow-hidden d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#quiz-form-modal">
+                            <span class="btn-glow"></span>
+                            <i class="fas fa-plus-circle me-2"></i>
+                            <span>Create New Quiz</span>
+                            <div class="btn-shine"></div>
+                        </button>
+                    {% endif %}
+                    <button class="btn btn-outline-light position-relative overflow-hidden d-flex align-items-center">
+                        <i class="fas fa-book-open me-2"></i>
+                        <span>Browse Quizzes</span>
+                        <div class="btn-shine"></div>
+                    </button>
+                </div>
+
+                <!-- Additional quizHub-stats or features section -->
+                <div class="hero-quizHub-quizHub-stats d-flex justify-content-center flex-wrap mt-4 animate__animated animate__fadeIn animate__delay-3s">
+                    <div class="quizHub-stat-item mx-3 my-2">
+                        <i class="fas fa-users text-light mb-2"></i>
+                        <p class="quizHub-stat-number">10,000+</p>
+                        <p class="quizHub-stat-label">Users</p>
+                    </div>
+                    <div class="quizHub-stat-item mx-3 my-2">
+                        <i class="fas fa-clipboard-list text-light mb-2"></i>
+                        <p class="quizHub-stat-number">50,000+</p>
+                        <p class="quizHub-stat-label">Quizzes Created</p>
+                    </div>
+                    <div class="quizHub-stat-item mx-3 my-2">
+                        <i class="fas fa-check-circle text-light mb-2"></i>
+                        <p class="quizHub-stat-number">1M+</p>
+                        <p class="quizHub-stat-label">Completions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+<div></div>
 {% include 'quizForm.html' %}
+
+<!-- Add the CSS for the redesign -->
+<style>
+    /* Hero-quizHub Section Styling */
+    #hero-quizHub {
+        background: url({% static 'ressources/img/hero-bg-quizHub-3.jpg' %}) no-repeat center center/cover;
+    }
+    #hero-quizHub {
+        position: relative;
+        height: 60vh;
+        min-height: 450px;
+        width: 100%;
+        color: #ffffff;
+        text-align: center;
+        overflow: hidden;
+        {#background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);#}
+
+        animation: gradientBG 15s ease infinite;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        z-index: 1;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    #hero-quizHub .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1;
+        backdrop-filter: blur(5px);
+    }
+
+    #hero-quizHub .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    #hero-quizHub .hero-quizHub-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        color: #e7ffdf;
+        text-shadow: 0 0 15px rgba(231, 255, 223, 0.5);
+    }
+
+    #hero-quizHub .hero-quizHub-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        color: #b3e6b8;
+        font-weight: 300;
+        letter-spacing: 1px;
+    }
+
+    /* Button Styling */
+    #hero-quizHub .hero-quizHub-buttons .btn {
+        font-size: 1rem;
+        padding: 12px 28px;
+        border-radius: 30px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    #hero-quizHub .hero-quizHub-buttons .btn-primary {
+        background-color: #e30917;
+        border: 1px solid white;
+        color: #ffffff;
+    }
+
+
+    #hero-quizHub .hero-quizHub-buttons .btn-primary:hover {
+        background-color: #b30714;
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(227, 9, 23, 0.4);
+    }
+
+    #hero-quizHub .hero-quizHub-buttons .btn-outline-light {
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        color: #ffffff;
+        background-color: transparent;
+    }
+
+    #hero-quizHub .hero-quizHub-buttons .btn-outline-light:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        border-color: #ffffff;
+    }
+
+    /* Button glow effect */
+    .btn-glow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+        opacity: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.5s;
+    }
+
+    .btn:hover .btn-glow {
+        opacity: 0.2;
+        animation: pulse 2s infinite;
+    }
+
+    /* Button shine effect */
+    .btn-shine {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+        );
+        animation: shine 3s infinite;
+    }
+
+    /* quizHub-Stats styling */
+    .hero-quizHub-quizHub-stats {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .quizHub-stat-item {
+        padding: 10px 15px;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+        border: 1px solid #e30917;
+    }
+
+    .quizHub-stat-item:hover {
+        transform: translateY(-5px);
+        background-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .quizHub-stat-item i {
+        font-size: 1.8rem;
+        color: #b3e6b8;
+    }
+
+    .quizHub-stat-number {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0;
+        color: #e7ffdf;
+    }
+
+    .quizHub-stat-label {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+        opacity: 0.8;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.2; }
+        50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.3; }
+        100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.2; }
+    }
+
+    @keyframes shine {
+        0% { left: -100%; }
+        20% { left: 100%; }
+        100% { left: 100%; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        #hero-quizHub .hero-quizHub-title {
+            font-size: 2.8rem;
+        }
+        #hero-quizHub .hero-quizHub-subtitle {
+            font-size: 1.3rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #hero-quizHub {
+            height: auto;
+            padding: 80px 0;
+        }
+        #hero-quizHub .hero-quizHub-title {
+            font-size: 2.2rem;
+        }
+        #hero-quizHub .hero-quizHub-subtitle {
+            font-size: 1.1rem;
+        }
+        #hero-quizHub .hero-quizHub-buttons .btn {
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            margin: 5px;
+        }
+        .quizHub-stat-item {
+            width: 130px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        #hero-quizHub .hero-quizHub-title {
+            font-size: 1.8rem;
+        }
+        #hero-quizHub .hero-quizHub-subtitle {
+            font-size: 1rem;
+        }
+        .hero-quizHub-quizHub-stats {
+            flex-direction: column;
+            align-items: center;
+        }
+        .quizHub-stat-item {
+            width: 100%;
+            max-width: 200px;
+            margin: 5px 0;
+        }
+    }
+</style>
+
+<!-- Optional: Add this before the closing body tag to enable particles effect -->
+<!-- You'll need to include the particles.js library -->
+<script>
+    // This script would need particles.js included before it
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#ffffff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: false },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffffff",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: false,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" }
+                    },
+                    modes: {
+                        repulse: { distance: 100, duration: 0.4 },
+                        push: { particles_nb: 4 }
+                    }
+                }
+            });
+        }
+    });
+</script>
 

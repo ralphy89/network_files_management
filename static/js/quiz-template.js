@@ -8,6 +8,102 @@ const reset_btn = document.getElementById('reset-question-btn');
 const questions_list_div = document.getElementById('questions-list');
 
 
+// For multiple choice questions
+const answerItems = document.querySelectorAll('.answer-item-student');
+let preview_answers = JSON.parse(sessionStorage.getItem('answers'));
+let selected_answer = preview_answers? Array.from(preview_answers) : [];
+answerItems.forEach(item => {
+    // Add click event for multiple choice answers
+    if (!item.querySelector('input[type="text"]')) {
+        item.addEventListener('click', function(e) {
+            // For single-select questions (if needed)
+           //answerItems.forEach(i => i.classList.remove('selected'));
+
+            if (e.target.dataset.questionId && e.target.dataset.answerId) {
+                // set selected state
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                } else {
+                    this.classList.toggle('selected');
+                    const q = e.target.dataset.questionId;
+                    const a = e.target.dataset.answerId;
+                    const t = e.target.dataset.questionType;
+                    selected_answer.push({
+                        'question_id':q,
+                        'answer':a,
+                        'type':t,
+                    })
+                    sessionStorage.setItem('answers', JSON.stringify(selected_answer));
+                    console.log(sessionStorage.getItem('answers'));
+                    // Add ripple effect manually
+                    // createRipple(event, this);
+                }
+            }
+            else {
+                item.click();
+            }
+
+        });
+    }
+});
+
+answerItems.forEach(item => {
+    const question = item.getAttribute('data-question-id').valueOf()
+    const answer = item.getAttribute('data-answer-id').valueOf()
+    Array.from(preview_answers).forEach(item_ => {
+        if (item_.question_id === `${question}` && item_.answer === `${answer}`){
+            item.classList.toggle('selected');
+        }
+    });
+});
+
+// Function to create ripple effect
+function createRipple(event, element) {
+    const circle = document.createElement('div');
+    const diameter = Math.max(element.clientWidth, element.clientHeight);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - element.getBoundingClientRect().left - radius}px`;
+    circle.style.top = `${event.clientY - element.getBoundingClientRect().top - radius}px`;
+    circle.classList.add('ripple');
+
+    // Remove existing ripples
+    const ripple = element.querySelector('.ripple');
+    if (ripple) {
+        ripple.remove();
+    }
+
+    element.appendChild(circle);
+}
+
+// Add ripple style
+const style = document.createElement('style');
+style.textContent = `
+    .ripple {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple-effect 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-effect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    .answer-item-student {
+      position: absolute;
+      overflow: hidden;
+      cursor: pointer;
+    }
+  `;
+document.head.appendChild(style);
+
 
 // Toggle between multiple choice and short answer
 questionTypeSelect.addEventListener('change', function() {
@@ -50,7 +146,7 @@ function removeQuestion(questionId) {
         fetch(`/quiz/question/${questionId}/remove/`, {
             method: 'POST',
             headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
+                // 'X-CSRFToken': '{{ csrf_token }}',
                 'Content-Type': 'application/json'
             }
         }).then(response => {
@@ -127,6 +223,169 @@ const display_question = (questions) => {
     })
 }
 
+const scheduleQuiz = (quiz_id, quiz_title, csrf_token) => {
+    Swal.fire({
+        title: "Schedule this quiz?",
+        text: "You can set a specific date and time for this quiz to be available",
+        icon: "question",
+        showCancelButton: true,
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#48c048",
+        confirmButtonText: "Yes, schedule it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Get the current date and time for default values
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const defaultDatetime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+            Swal.fire({
+                title: "Schedule Quiz",
+                html: `
+          <div class="form-group">
+            <label for="quiz-datetime">Date and Time:</label>
+            <input id="quiz-datetime" type="datetime-local" class="swal2-input" min="${defaultDatetime}" value="${defaultDatetime}">
+          </div>
+          <div class="form-group mt-3">
+            <label for="quiz-duration">Duration (minutes):</label>
+            <input id="quiz-duration" type="number" class="swal2-input" min="5" value="30">
+          </div>
+        `,
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Schedule",
+                confirmButtonColor: "#48c048",
+                showLoaderOnConfirm: true,
+                preConfirm: async () => {
+                    const dateTimeInput = document.getElementById('quiz-datetime').value;
+                    const durationInput = document.getElementById('quiz-duration').value;
+
+                    if (!dateTimeInput) {
+                        return Swal.showValidationMessage('Please select a date and time');
+                    }
+
+                    if (!durationInput || durationInput < 5) {
+                        return Swal.showValidationMessage('Duration must be at least 5 minutes');
+                    }
+
+                    try {
+                        const scheduledDateTime = new Date(dateTimeInput);
+                        const currentTime = new Date();
+
+                        if (scheduledDateTime <= currentTime) {
+                            return Swal.showValidationMessage('Scheduled time must be in the future');
+                        }
+
+                        const dataToSend = {
+                            quiz_id: quiz_id,
+                            quiz_title: quiz_title,
+                            duration: parseInt(durationInput),
+                            scheduled_datetime: scheduledDateTime.toISOString()
+                        };
+
+                        const response = await fetch('/publishQuiz', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrf_token,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(dataToSend)
+                        });
+
+                        if (!response.ok) {
+                            return Swal.showValidationMessage(`${JSON.stringify(await response.json())}`);
+                        }
+
+                        return response.json();
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading(),
+            }).then(confirmed => {
+                if (confirmed.isConfirmed) {
+                    const scheduledDate = new Date(document.getElementById('quiz-datetime').value);
+                    const formattedDateTime = scheduledDate.toLocaleString();
+
+                    Swal.fire({
+                        title: "Quiz Scheduled Successfully",
+                        html: `Your quiz <b>${quiz_title}</b> has been scheduled for <b>${formattedDateTime}</b>`,
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    }).then((res) => {
+                        location.reload();
+                    });
+                }
+            });
+        }
+    });
+};
+const publishQuiz = (quiz_id, quiz_title, csrf_token) => {
+    const url = `/publishQuiz`;
+    Swal.fire({
+        title: "You're about to publish this quiz, are you sure ?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#48c048",
+        confirmButtonText: "Yes, publish it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "Published",
+                text: "Enter duration (min).",
+                input: 'number',
+                inputAttributes: {
+                    min: 5,
+                },
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Continue",
+                confirmButtonColor: "#48c048",
+                showLoaderOnConfirm: true,
+                preConfirm: async (duration) => {
+                    try {
+                        const dataToSend = {
+                            duration : duration,
+                            quiz_id: quiz_id,
+                            quiz_title: quiz_title,
+                        }
+                        const response = await fetch('/publishQuiz', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrf_token,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(dataToSend)
+                        });
+                        if (!response.ok) {
+                            return Swal.showValidationMessage(`${JSON.stringify(await response.json())}`);
+                        }
+                        return response.json();
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    }},
+                allowOutsideClick: () => !Swal.isLoading(),
+            }).then(confirmed => {
+                if (confirmed.isConfirmed){
+                    Swal.fire({
+                        title: "Published Successfully",
+                        text: "Quiz has been published!",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6",
+                    }).then((res) => {
+                           location.reload();
+                    });
+                }
+            });
+        }
+    });
+}
 const successMessage = msg => {
     const Toast = Swal.mixin({
         toast: true,
@@ -167,7 +426,6 @@ const saveQuestion =  (quiz_id, csrf_token) => {
                 a.text.length > 0 ? has++ : '';
                 a.isCorrect === true ? hasCorrect++ : '';
             })
-            console.log(has, hasCorrect)
             if (has < expected || hasCorrect <= 0){
 
                 Swal.fire({

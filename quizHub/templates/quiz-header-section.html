@@ -1,28 +1,333 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/quiz-template.css' %}">
-
-<section id="quiz-header-section">
+{% if "Teacher" in user.groups.all|stringformat:"s" %}
+    <section id="quiz-header-section">
     <div class="quiz-header">
         <h1 class="quiz-header-title">{{ quiz_title }}</h1>
         <p class="quiz-header-description">{{ quiz_description }}</p>
+
         <div class="quiz-actions">
-{#            <button onclick="location.href='{% url 'add_question' quiz_id %}'">#}
-{#                Add New Question#}
-{#                <i class="fas fa-plus-circle"></i>#}
-{#            </button>#}
-{#            <button >#}
-{#                Add New Question#}
-{#                <i class="fas fa-plus-circle"></i>#}
-{#            </button>#}
-{#            <button>#}
-{#                Preview Quiz#}
-{#                <i class="fas fa-eye"></i>#}
-{#            </button>#}
-{#            <button onclick="location.href='{% url 'quiz_preview' quiz_id %}'">#}
-{#                Preview Quiz#}
-{#                <i class="fas fa-eye"></i>#}
-{#            </button>#}
+            {% if quiz_status == 'P' or quiz_status == 'S' %}
+                <span class="quiz-status-badge quiz-status">
+                 <i class="fas fa-broadcast-tower"></i> Published
+                </span>
+
+                <!-- Enhanced Time Display -->
+                <div class="quiz-time-info">
+                    <div class="time-grid">
+                        <!-- Duration -->
+                        <div class="time-item">
+                            <div class="time-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="time-content">
+                                <div class="time-label">Duration</div>
+                                <div class="time-value">{{ quiz_duration }} minutes</div>
+                            </div>
+                        </div>
+
+                        <!-- Start Time -->
+                        <div class="time-item">
+                            <div class="time-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="time-content">
+                                <div class="time-label">Start Time</div>
+                                <div class="time-value">{{ quiz_start }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Countdown Timer -->
+                        <div class="time-item" id="countdownContainer">
+                            <div class="time-icon">
+                                <i class="fas fa-stopwatch"></i>
+                            </div>
+                            <div class="time-content">
+                                <div class="time-label">Time Remaining</div>
+                                <div class="time-value countdown" id="quizCountdown">Calculating...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="time-progress-container">
+                        <div class="time-progress-label">
+                            Quiz Progress: <h4 id="percentage" class="badge text-danger">0 %</h4>
+                        </div>
+                        <div class="time-progress-bar-container">
+                            <div class="time-progress-bar" id="quizProgressBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+            {% elif quiz_status != 'P' and  quiz_status != 'A'%}
+                <button {% if quiz_status == 'P' %} disabled {% endif %}
+                                                    onclick="publishQuiz({{ quiz_id }}, '{{ quiz_title }}', '{{ csrf_token }}')">
+                    Publish Now <i class="fas fa-share"></i>
+                </button>
+                <button class="schedule" {% if quiz_status == 'P' %} disabled {% endif %}
+                                                    onclick="scheduleQuiz({{ quiz_id }}, '{{ quiz_title }}', '{{ csrf_token }}')">
+                    Schedule Publish <i class="fas fa-calendar"></i>
+                </button>
+            {% elif quiz_status == 'A' %}
+                <span class="quiz-status-badge quiz-status archived">
+                 <i class="fas fa-archive"></i> Archived
+                </span>
+            {% endif %}
         </div>
     </div>
 </section>
+{% else %}
+    <section id="quiz-header-section">
+        <div class="quiz-header">
+            <h1 class="quiz-header-title">{{ quiz_title }}</h1>
+            <p class="quiz-header-description">{{ quiz_description }}</p>
 
+            <div class="quiz-actions">
+                {% if quiz_status == 'P' or quiz_status == 'S' %}
+                    {% if not submitted %}
+                    <!-- Enhanced Time Display -->
+                    <div class="quiz-time-info">
+                        <div class="time-grid">
+                            <div class="time-item">
+                                <div class="time-icon">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <div class="time-content">
+                                    <div class="time-label">Answers</div>
+                                    <div id="note" class="time-value"> 0 / 10</div>
+                                </div>
+                            </div>
+                            <!-- Duration -->
+                            <div class="time-item">
+                                <div class="time-icon">
+                                    <i class="fas fa-hourglass-half"></i>
+                                </div>
+                                <div class="time-content">
+                                    <div class="time-label">Duration</div>
+                                    <div class="time-value">{{ quiz_duration }} minutes</div>
+                                </div>
+                            </div>
+
+                            <!-- Start Time -->
+                            <div class="time-item">
+                                <div class="time-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="time-content">
+                                    <div class="time-label">Start Time</div>
+                                    <div class="time-value">{{ quiz_start }}</div>
+                                </div>
+                            </div>
+
+                            <!-- Countdown Timer -->
+                            <div class="time-item" id="countdownContainer">
+                                <div class="time-icon">
+                                    <i class="fas fa-stopwatch"></i>
+                                </div>
+                                <div class="time-content">
+                                    <div class="time-label">Time Remaining</div>
+                                    <div class="time-value countdown" id="quizCountdown">Calculating...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="time-progress-container">
+                            <div class="time-progress-label">
+                                Quiz Progress: <h4 id="percentage" class="badge text-danger">0 %</h4>
+                            </div>
+                            <div class="time-progress-bar-container">
+                                <div class="time-progress-bar" id="quizProgressBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <span class="quiz-status-badge quiz-status active">
+                            <i class="fas fa-smile"></i>Already Submitted
+                        </span>
+                    {% endif %}
+                {% endif %}
+                {% if quiz_status == 'A'%}
+                    {% if not submitted %}
+                        <span class="quiz-status-badge quiz-status archived">
+                            <i class="fas fa-archive"></i> Archived
+                        </span>
+                    {% else %}
+                        <span class="quiz-status-badge quiz-status active">
+                            <i class="fas fa-smile"></i>Already Submitted
+                        </span>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+{% endif %}
+<script src="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.all.min.js
+"></script>
+<link href="
+https://cdn.jsdelivr.net/npm/sweetalert2@11.17.2/dist/sweetalert2.min.css
+" rel="stylesheet">
+
+<script>
+
+        // Check if we're on a published quiz page
+        const countdownElement = document.getElementById('quizCountdown');
+        const progressBar = document.getElementById('quizProgressBar');
+        const percentage = document.getElementById('percentage');
+        if (countdownElement && progressBar) {
+            updateQuizTimer();
+        }
+
+
+        function showQuizEndedPopupForStudent() {
+            Swal.fire({
+                title: 'Time\'s Up!',
+                html: 'Your quiz <b>{{ quiz_title }}</b> submission time has ended. You have 1 minutes to submit your answers.',
+                icon: 'info',
+                iconColor: '#3085d6',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown',
+                    icon: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                },
+                background: '#fff',
+                backdrop: `
+      rgba(0,0,123,0.4)
+      url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 22c5.421 0 10-4.579 10-10S17.421 2 12 2 2 6.579 2 12s4.579 10 10 10zm0-18c4.337 0 8 3.663 8 8s-3.663 8-8 8-8-3.663-8-8 3.663-8 8-8z' fill='%23fff'/%3E%3Cpath d='M12 12V7' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M12 12L16 16' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")
+      center top
+      no-repeat
+    `,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false,
+                timer: 10000,
+                timerProgressBar: true,
+                showConfirmButton: true,
+                confirmButtonColor: '#1c3e4b',
+                confirmButtonText: 'Submit Now',
+                showCancelButton: true,
+                cancelButtonText: 'Continue Working',
+                cancelButtonColor: '#6c757d',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User clicked "Submit Now"
+                    {#document.getElementById('submit-quiz-form').submit(); // Assumes you have a form with this ID#}
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // User clicked "Continue Working" - close popup and let them continue
+                    Swal.close();
+                } else {
+                    // Timer expired or modal was closed by other means
+                    location.reload();
+                }
+            });
+        }
+
+        function showQuizEndedPopup() {
+            Swal.fire({
+                title: 'Time\'s Up!',
+                html: 'Your quiz <b>{{ quiz_title }}</b> submission time has ended.',
+                icon: 'info',
+                iconColor: '#3085d6',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown',
+                    icon: 'animate__animated animate__bounceIn'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                },
+                background: '#fff',
+                backdrop: `
+      rgba(0,0,123,0.4)
+      url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 22c5.421 0 10-4.579 10-10S17.421 2 12 2 2 6.579 2 12s4.579 10 10 10zm0-18c4.337 0 8 3.663 8 8s-3.663 8-8 8-8-3.663-8-8 3.663-8 8-8z' fill='%23fff'/%3E%3Cpath d='M12 12V7' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M12 12L16 16' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")
+      center top
+      no-repeat
+    `,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                timer: 5000,
+                timerProgressBar: true,
+                showConfirmButton: true,
+                confirmButtonColor: '#1c3e4b',
+                confirmButtonText: 'See Submissions',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Code to execute when first button is clicked
+                    //location.reload();
+                } else if (result.isDenied) {
+                    // Code to execute when second button is clicked
+                    Swal.close(); // Simply close the popup
+                }
+
+            });
+        }
+        function updateQuizTimer() {
+
+            // Get quiz data from the page
+            const quizStartStr = "{{ quiz_start }}";
+            const quizDurationMinutes = parseInt("{{ quiz_duration }}");
+
+            // Parse the start time (adjust format as needed)
+            // format like "2025-03-08 14:30"
+            const quizStartDate = new Date(quizStartStr);
+
+            // Calculate end time
+            const quizEndDate = new Date(quizStartDate.getTime() + quizDurationMinutes * 60000);
+
+            // Get current time
+            const currentTime = new Date();
+            // Calculate time remaining
+            let timeRemainingMs = quizEndDate - currentTime;
+            console.log(quizEndDate , currentTime);
+
+            // If quiz hasn't started yet
+            if (currentTime < quizStartDate) {
+                countdownElement.textContent = "Quiz not started yet";
+                progressBar.style.width = "0%";
+
+                // If quiz has ended
+            } else if (timeRemainingMs <= 0) {
+                countdownElement.textContent = "Quiz completed";
+                progressBar.style.width = "100%";
+                percentage.innerText = `100%`
+                if ('{{ user.groups.all|stringformat:"s" }}'.includes('Student')){
+                    showQuizEndedPopupForStudent()
+                } else {
+                    showQuizEndedPopup();
+                }
+                return
+                // Quiz is in progress
+            } else {
+
+                // Convert time remaining to hours, minutes and seconds
+                const hoursRemaining = Math.floor(timeRemainingMs / 3600000);
+                const minutesRemaining = Math.floor((timeRemainingMs % 3600000) / 60000);
+                const secondsRemaining = Math.floor((timeRemainingMs % 60000) / 1000);
+
+                // Format the countdown display
+                let countdownText = "";
+                if (hoursRemaining > 0) {
+                    countdownText += `${hoursRemaining}h `;
+                }
+                countdownText += `${minutesRemaining}m ${secondsRemaining}s`;
+
+                // Calculate progress percentage
+                const totalDurationMs = quizDurationMinutes * 60000;
+                const elapsedTimeMs = currentTime - quizStartDate;
+                const progressPercentage = Math.min(100, (elapsedTimeMs / totalDurationMs) * 100);
+
+                // Update UI
+                countdownElement.textContent = countdownText;
+                progressBar.style.width = `${progressPercentage}%`;
+                percentage.innerText = `${parseInt(progressPercentage)}%`
+            }
+
+            // Update timer every second
+            setTimeout(updateQuizTimer, 1000);
+        }
+
+</script>

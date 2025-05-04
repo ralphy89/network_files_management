@@ -16,6 +16,8 @@
 }
 
 /* Questions Block Styles */
+
+
 #questions-block {
     background-color: #f9f9f9;
     padding: 2rem;
@@ -93,17 +95,150 @@
     color: #2ecc71;
 }
 
+.correct-answer.selected {
+    box-shadow: 0 0 0 2px rgba(90, 245, 144, 0.57);
+    animation: pulse 1.5s ease-in-out;
+    font-weight: bolder;
+    background-color: rgb(255, 255, 255);
+
+}
+
 .incorrect-answer {
     background-color: rgba(231, 76, 60, 0.1);
     border: 1px solid #e74c3c;
     color: #e74c3c;
 }
 
+.incorrect-answer.selected {
+    box-shadow: 0 0 0 2px rgba(238, 13, 54, 0.47);
+    animation: pulse 1.5s ease-in-out;
+    font-weight: bolder;
+    background-color: rgb(255, 255, 255);
+    font-weight: bolder;
+}
+
+
 .answer-item {
     padding: 0.75rem;
     border-radius: 8px;
     font-size: 0.9rem;
 }
+
+/* Base styles for answer items */
+.answer-item-student, .answer-item-student-submitted {
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #e30917;
+    color: #032834;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    font-size: medium;
+    max-height: fit-content;
+}
+
+/* Hover effect */
+.answer-item-student:hover, .answer-item-student-submitted:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgb(255, 255, 255);
+    background-color: rgba(202, 243, 202, 0.2);
+    box-shadow: 0 0 0 2px rgb(90, 245, 90);
+    border: none;
+}
+
+/* Selected state */
+.answer-item-student.selected {
+    background-color: rgba(46, 204, 113, 0.1);
+    border: 1px solid #2ecc71;
+    box-shadow: 0 0 0 2px rgb(90, 245, 90);
+    animation: pulse 1.5s ease-in-out;
+    font-weight: bolder;
+}
+
+/* Focus state for text inputs */
+.answer-item-student input[type="text"], .answer-item-student-submitted input[type='text'] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.answer-item-student input[type="text"]:focus, .answer-item-student-submitted input[type='text']:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+/* Active/clicked state */
+.answer-item-student:active, .answer-item-student-submitted:active {
+    transform: scale(0.98);
+}
+
+/* Ripple effect when clicked */
+.answer-item-student::after, .answer-item-student-submitted::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 100px;
+    height: fit-content;
+    margin-top: -50px;
+    margin-left: -50px;
+    top: 50%;
+    left: 50%;
+    animation: ripple 1s;
+    opacity: 0;
+}
+
+/* Appear animation when items load */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pulse animation for selected items */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 8px rgba(231, 76, 60, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+    }
+}
+
+/* Click ripple animation */
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(10);
+        opacity: 0;
+    }
+}
+
+/* Apply sequential animation to multiple answer items */
+.answer-item-student .answer-item-student-submitted {
+    animation: fadeIn 0.3s ease-out backwards;
+}
+
+
+
 
 @media (max-width: 768px) {
     .answers-container {
@@ -123,6 +258,7 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
+
 
 #quiz-header-section::before {
     content: '';
@@ -201,6 +337,13 @@
     box-shadow: 0 10px 20px rgba(252, 252, 252, 0.85);
 }
 
+.quiz-header button.schedule {
+    background: rgb(238, 13, 54) !important;
+
+}
+
+
+
 .quiz-header button::before {
     content: '';
     position: absolute;
@@ -212,10 +355,16 @@
     transition: all 0.5s ease;
 }
 
-.quiz-header button:hover {
+.quiz-header button:hover{
     transform: translateY(-5px);
     box-shadow: 0 15px 25px rgb(56, 112, 134);
     background: #23576b !important;
+}
+
+.quiz-header button.schedule:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(246, 73, 83, 0.65);
+    background: #f64953 !important;
 }
 
 .quiz-header button:hover::before {
@@ -224,6 +373,37 @@
 
 .quiz-header button i {
     margin-left: 10px;
+}
+
+.quiz-status-badge {
+
+    padding: 0.5rem 1rem;
+    border-radius: 1.5rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+}
+.quiz-status {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+
+}
+
+.archived {
+    background: rgba(46, 204, 113, 0.2);
+    color: #cc2e2e;
+    border: 1px solid #2ecc71;
+}
+
+
+.quiz-status-info {
+    background-color: transparent;
+    background: rgba(238, 13, 54, 0.04);
+    color: #ee0d36;
+    border: 1px solid #ee0d36;
 }
 
 /* New Form Styles */
@@ -330,6 +510,123 @@
     box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
 }
 
+/* Enhanced Quiz Time Display */
+.quiz-time-info {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.quiz-time-info:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.time-item {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 6px;
+    padding: 10px;
+    transition: all 0.2s ease;
+}
+
+.time-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.time-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(227, 9, 23, 0.1);
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.time-icon i {
+    color: #e30917;
+    font-size: 1.2rem;
+}
+
+.time-content {
+    flex: 1;
+}
+
+.time-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.time-value {
+    font-weight: 600;
+    color: #343a40;
+}
+
+.countdown {
+    color: #e30917;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.time-progress-container {
+    margin-top: 12px;
+}
+
+.time-progress-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 6px;
+}
+
+.time-progress-bar-container {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.time-progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #e30917, #ff5252);
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+/* Existing status badge enhancements */
+.quiz-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-right: 10px;
+    box-shadow: lightgreen;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .time-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
     .question-actions{
         display: grid;
@@ -360,3 +657,131 @@
         padding: 0px;
     }
 }
+
+/* Modern, responsive bottom button styles */
+.bottom-btn {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    position: sticky;
+    bottom: 20px;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+/* Button base styling */
+.bottom-btn .btn {
+    position: relative;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden;
+    transform: translateY(0);
+}
+
+/* Button hover effect */
+.bottom-btn .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+}
+
+/* Button active/pressed effect */
+.bottom-btn .btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
+}
+
+/* Icon styling and animation */
+.bottom-btn .btn i {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.bottom-btn .btn:hover i {
+    transform: translateX(4px);
+    animation: pulse 1s infinite;
+}
+
+/* Submit button specific styling */
+.bottom-btn .btn-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+}
+
+/* Glow effect on hover */
+.bottom-btn .btn-success:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+    );
+    transition: left 0.7s ease;
+}
+
+.bottom-btn .btn-success:hover:before {
+    left: 100%;
+}
+
+/* Pulse animation for the icon */
+@keyframes pulse {
+    0% {
+        transform: translateX(4px);
+    }
+    50% {
+        transform: translateX(8px);
+    }
+    100% {
+        transform: translateX(4px);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .bottom-btn {
+        padding: 15px 0;
+        bottom: 15px;
+    }
+
+    .bottom-btn .btn {
+        padding: 10px 24px;
+        width: 80%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bottom-btn {
+        padding: 10px 0;
+        bottom: 10px;
+    }
+
+    .bottom-btn .btn {
+        padding: 8px 20px;
+        font-size: 14px;
+        width: 90%;
+    }
+}
+
+/* Optional: Float button when scrolled to the bottom */
+.float-active {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    padding: 15px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
